@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="姓名">
-        <el-input v-model="form.name" />
+        <el-input v-model="form.name" class="formItem" />
       </el-form-item>
       <!-- <el-form-item label="Activity zone">
         <el-select v-model="form.region" placeholder="please select your zone">
@@ -88,6 +88,9 @@ export default {
 <style scoped>
 .line{
   text-align: center;
+}
+.formItem{
+  width:30%;
 }
 </style>
 

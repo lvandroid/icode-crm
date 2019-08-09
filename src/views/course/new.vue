@@ -1,11 +1,36 @@
 <template>
     <div class="app-containter">
         <el-form :model="form" ref="form" label-width="120px">
-          <el-form-item label="课程名">
-              <el-input v-model="form.name" placeholder=""/>
+          <el-form-item label="课程名" >
+              <el-input v-model="form.name" placeholder="" class="formItem"/>
           </el-form-item>
           <el-form-item label="开课日期">
-              <el-date-picker v-model="datevalue" type="daterange" range-separator="至" start-placeholde="开始日期" end-placeholde="结束日期"></el-date-picker>
+              <el-date-picker v-model="startDate"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="结课日期">
+              <el-date-picker v-model="endDate"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="课时数">
+              <el-input-number v-model="form.courseSum" placeholder=""></el-input-number>
+          </el-form-item>
+          <el-form-item label="课程总价">
+              <el-input-number v-model="form.totalPrice" :precision="2" type="number"/>
+          </el-form-item>
+          <el-form-item label="课程单价">
+              <label class="labelTxt">{{form.unitPrice}}</label>
+          </el-form-item>
+          <el-form-item label="活动名称">
+              <el-input v-model="form.actName" placeholder=""  class="formItem" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="活动总价">
+              <el-input-number v-model="form.actTotalPrice" :precision="2" placeholder="" type="number" clearable/>
+          </el-form-item>
+          <el-form-item label="活动单价">
+              <!-- <el-input v-model="form.actUnitPrice" placeholder="" type="number"  class="formItem" clearable="true"></el-input> -->
+              <label class="labelTxt">{{form.actUnitPrice}}</label>
+          </el-form-item>
+          <el-form-item label="备注">
+              <el-input v-model="form.desc" class="txtArea" placeholder="" type="textarea" maxlength="255" show-word-limit="ture"></el-input>
           </el-form-item>
           <el-form-item>
               <el-button type="primary">新增</el-button>
@@ -21,9 +46,18 @@ export default {
         return {
             form:{
                 name: '',
-                datevalue: '',
+                startDate: '',
+                endDate: '',
+                courseSum: '0',
+                totalPrice: '0.00',
+                unitPrice: '0.00',
+                actName: '',
+                actTotalPrice: '0.00',
+                actUnitPrice: '0.00',
+                desc: '',
             },
-            datevalue: '',
+            startDate: '',
+            endDate: '',
         }
     },
     methods: {
@@ -33,6 +67,15 @@ export default {
 </script>
 
 <style>
-
+    .formItem{
+        width: 30%;
+    }
+    .txtArea{
+        width: 80%;
+    }
+    .labelTxt{
+        color: red;
+        font-size: 18px;
+    }
 </style>
 
