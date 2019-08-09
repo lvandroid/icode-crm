@@ -5,10 +5,10 @@
               <el-input v-model="form.name" placeholder="" class="formItem"/>
           </el-form-item>
           <el-form-item label="开课日期">
-              <el-date-picker v-model="startDate"></el-date-picker>
+              <el-date-picker v-model="startDate" type="date" value-format="timestamp"></el-date-picker>
           </el-form-item>
           <el-form-item label="结课日期">
-              <el-date-picker v-model="endDate"></el-date-picker>
+              <el-date-picker v-model="endDate" type="date" value-format="timestamp"></el-date-picker>
           </el-form-item>
           <el-form-item label="课时数">
               <el-input-number v-model="form.courseSum" placeholder=""></el-input-number>
@@ -33,14 +33,15 @@
               <el-input v-model="form.desc" class="txtArea" placeholder="" type="textarea" maxlength="255" show-word-limit="ture"></el-input>
           </el-form-item>
           <el-form-item>
-              <el-button type="primary">新增</el-button>
-              <el-button >取消</el-button>
+              <el-button type="primary" @click="onSubmit">新增</el-button>
+              <el-button @click="onCancel">取消</el-button>
           </el-form-item>
         </el-form>
     </div>    
 </template>
 
 <script>
+import { addCourse } from '@/api/course'
 export default {
     data() {
         return {
@@ -61,7 +62,16 @@ export default {
         }
     },
     methods: {
-        
+        onSubmit(){
+            addCourse(this.form).then(response =>{
+                this.$router.push("/course/find")
+            }).catch(error=>{
+                console.error(error)
+            })
+        },
+        onCancel(){
+
+        }
     },
 }
 </script>
