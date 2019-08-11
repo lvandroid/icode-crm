@@ -102,21 +102,21 @@ export const constantRoutes = [
   {
     path: '/course',
     component: Layout,
-    rediredt: '/course/find',
+    rediredt: '/course/list',
     name: 'Course',
     meta: { title: '课程', icon: 'table' },
     children: [
       {
-        path: 'find',
+        path: 'list',
         name: 'CourseList',
-        component: () => import('@/views/course/find'),
-        meta: { title: '查看', icon: 'table' }
+        component: () => import('@/views/course/index'),
+        meta: { title: '课程列表', icon: 'list' }
       },
       {
         path: 'add',
         name: 'AddCourse',
         component: () => import('@/views/course/new'),
-        meta: { title: '新增', icon: 'form' }
+        meta: { title: '创建课程', icon: 'edit' }
       }
     ]
   },

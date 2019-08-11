@@ -1,5 +1,31 @@
 <template>
   <div class="app-container">
+
+     <div class="filter-container">
+      <el-input v-model="listQuery.title" placeholder="课程名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
+      </el-select>
+      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
+        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
+      </el-select>
+      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
+      </el-select>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        添加
+      </el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+        导出
+      </el-button>
+      <!-- <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        reviewer
+      </el-checkbox> -->
+    </div>
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -95,15 +121,21 @@
       </el-table-column>
     </el-table>
 
-    <el-pagination :total="totalNum" :current-page="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[5,10,20,50,100]" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="sizes,prev,pager,next,jumper,total"></el-pagination>
+    <!-- <el-pagination :total="totalNum" :current-page="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[5,10,20,50,100]" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="sizes,prev,pager,next,jumper,total"></el-pagination> -->
+
+    <pagination :total="totalNum" :page-sizes="[5,10,20,50,100]" :v-show="totalNum>0" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="fetchData" />
+
   </div>
 </template>
 
 <script>
 import { getList } from '@/api/table'
 import { getCourse } from '@/api/course'
+import { parseTime } from '@/utils'
+import Pagination from '@/components/Pagination'
 
 export default {
+  components: { Pagination },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -122,6 +154,18 @@ export default {
       listQuery:{
         pageNum: 1,
         pageSize: 5,
+        name: '',
+        startDate: '',
+        endDate: '',
+        courseSum :'',
+        totalPrice: '',
+        unitPrice: '',
+        actName: '',
+        actTotalPrice: '',
+        actUnitPrice: '',
+        classRef: '',
+        mark: '', 
+        sort: '+id'
       }
     }
   },
@@ -132,21 +176,47 @@ export default {
     fetchData() {
       this.listLoading = true
       getCourse(this.listQuery).then(response => {
-        this.list = response.data
+        this.list = response.data.list
         this.totalNum = response.total
         this.listLoading = false
       })
     },
-    handleCurrentChange(val){
-      console.log(`当前第${val}页`)
-      this.listQuery.pageNum=val
-      this.fetchData()
+    handleCreate(){
+      this.$router.push("/course/add")
     },
-    handleSizeChange(val){
-      console.log(`每页${val}条`)
-      this.listQuery.pageSize=val
-      this.fetchData()
-    }
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['课程名称','开课日期', '结课日期', '课时数','课程总价','课程单价','活动名称','活动课时数','活动总价','活动单价','推荐年级','备注']
+        const filterVal = ['name','startDate', 'endDate', 'courseSum', 'totalPrice', 'unitPrice','actName','actCourseSum','actTotalPrice','actUnitPrice','classRef','mark']
+        const data = this.formatJson(filterVal, this.list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: '课程列表'
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'startDate' || j === 'endDate') {
+          return parseTime(v[j],'{y}-{m}-{d}')
+        } else {
+          return v[j]
+        }
+      }))
+    },
+    // handleCurrentChange(val){
+    //   console.log(`当前第${val}页`)
+    //   this.listQuery.pageNum=val
+    //   this.fetchData()
+    // },
+    // handleSizeChange(val){
+    //   console.log(`每页${val}条`)
+    //   this.listQuery.pageSize=val
+    //   this.fetchData()
+    // }
   },
 }
 </script>
