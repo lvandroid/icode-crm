@@ -138,7 +138,7 @@ export default {
     methods: {
         onSubmit(){
             addCourse(this.form).then(response =>{
-                this.$router.push("/course/find")
+                this.$router.push("/course/list")
             }).catch(error=>{
                 console.error(error)
             })

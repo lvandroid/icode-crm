@@ -8,11 +8,11 @@ export function addCourse(data) {
   })
 }
 
-export function getCourse(params) {
+export function getCourse(data) {
   return request({
     // url: '/api/course/list',
     url: '/api/course/getCourseList',
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
