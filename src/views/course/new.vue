@@ -5,8 +5,8 @@
               <el-input v-model="form.name" placeholder="" class="formItem"/>
           </el-form-item>
           <el-form-item label="课程类型">
-              <el-radio-group v-model="type" v-for="(item, index) in courseType" :key="index" change="typeChange">
-                <el-radio-button :label="item.name"></el-radio-button>
+              <el-radio-group v-model="type" v-for="(item,index) in courseType" :key="index" @change="typeChange" size="medium">
+                <el-radio-button :label="item.name" class="radioItem"/>
               </el-radio-group>
           </el-form-item>
           <el-form-item label="开课日期">
@@ -74,6 +74,7 @@ export default {
                 mark: '',
             },
              courseType:[],
+             typeMap:{},
              type:'',
              courseId:'',
              classes:[
@@ -154,8 +155,13 @@ export default {
         },
         getCourseTypeList(){
             getAllCourseType().then(response => {
-                this.courseType = response.data
+                var datas = response.data
+                this.courseType = datas
+                datas.forEach(element => {
+                    this.typeMap[element.name] = element.id
+                });
                 console.log(this.courseType)
+                console.log(this.typeMap)
             }).catch(error=>{
                 console.error(error)
             })
@@ -177,7 +183,9 @@ export default {
             }
         },
         typeChange(val){
-
+            // console.log("type:"+val)
+            // console.log("id:"+this.typeMap[val])
+            this.form.courseTypeId= this.typeMap[val]
         },
         
         onCancel(){
@@ -200,6 +208,9 @@ export default {
     .labelTxt{
         color: red;
         font-size: 18px;
+    }
+    .radioItem{
+        padding-right: 20px;
     }
 </style>
 

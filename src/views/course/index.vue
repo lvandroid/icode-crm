@@ -45,6 +45,11 @@
           {{ scope.row.name }}
         </template>
       </el-table-column>
+      <el-table-column label="课程类型" prop="courseTypeName" align="center" width="100">
+        <template slot-scope="scope">
+          {{scope.row.courseTypeName}}
+        </template>
+      </el-table-column>
       <el-table-column label="开课日期" width="200" prop="startDate" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.startDate | parseTime('{y}-{m}-{d}')}}</span>
@@ -156,6 +161,7 @@ export default {
         pageNum: 1,
         pageSize: 5,
         name: '',
+        courseType: '',
         startDate: '',
         endDate: '',
         courseSum :'',
