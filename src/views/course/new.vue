@@ -4,11 +4,11 @@
           <el-form-item label="课程名" >
               <el-input v-model="form.name" placeholder="" class="formItem"/>
           </el-form-item>
-          <!-- <el-form-item label="课程类型">
+          <el-form-item label="课程类型">
               <el-radio-group v-model="type" v-for="(item, index) in courseType" :key="index" change="typeChange">
-                <el-radio-button label="{{item.name}}"/>
+                <el-radio-button :label="item.name"></el-radio-button>
               </el-radio-group>
-          </el-form-item> -->
+          </el-form-item>
           <el-form-item label="开课日期">
               <el-date-picker v-model="form.startDate" type="date" value-format="timestamp"></el-date-picker>
           </el-form-item>
@@ -154,7 +154,8 @@ export default {
         },
         getCourseTypeList(){
             getAllCourseType().then(response => {
-                this.sourceType = response.data
+                this.courseType = response.data
+                console.log(this.courseType)
             }).catch(error=>{
                 console.error(error)
             })
