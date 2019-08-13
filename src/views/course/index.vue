@@ -9,7 +9,7 @@
       <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
         <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
       </el-select> -->
-      <el-select v-model="listQuery.orderKey" style="width: 140px" class="filter-item" @change="handleFilter">
+      <el-select v-model="listQuery.value" placeholder="排序" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -33,7 +33,7 @@
       border
       fit
       highlight-current-row
-      sort-change="sortChange"
+      @sort-change="sortChange"
     >
       <!-- <el-table-column align="center" prop="id" label="ID" width="95">
         <template slot-scope="scope">
@@ -122,8 +122,6 @@
       </el-table-column>
     </el-table>
 
-    <!-- <el-pagination :total="totalNum" :current-page="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[5,10,20,50,100]" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="sizes,prev,pager,next,jumper,total"></el-pagination> -->
-
     <pagination v-show="totalNum>0" :total="totalNum" :page-sizes="[5,10,20,50,100]" :v-show="totalNum>0" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="fetchData" />
 
   </div>
@@ -132,11 +130,13 @@
 <script>
 import { getList } from '@/api/table'
 import { getCourse } from '@/api/course'
+import waves from '@/directive/waves'
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination'
 
 export default {
   components: { Pagination },
+  directives: { waves },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -170,12 +170,14 @@ export default {
         orderKey: 'id',
         orderType: 'desc'
       },
+      value:'',
       sortOptions: [
-        {label: '默认', key: '+id' }, { label: '倒序', key: '-id' },
-        {label:'开课时间升序', key:'+start_date'},{label:'开课时间降序', key:'-start_date'},
-        {label:'结课时间升序', key:'+end_date'},{label:'结课时间降序', key:'-end_date'},
-        {label:'总价升序', key:'+total_price'},{label:'总价降序', key:'-total_price'},
+        {label: '默认', key: '-id' }, { label: '倒序', key: '+id' },
+        {label:'开课时间升序', key:'+startDate'},{label:'开课时间降序', key:'-startDate'},
+        {label:'结课时间升序', key:'+endDate'},{label:'结课时间降序', key:'-endDate'},
+        {label:'总价升序', key:'+totalPrice'},{label:'总价降序', key:'-totalPrice'},
       ],
+        downloadLoading: false
     }
   },
   created() {
@@ -195,13 +197,18 @@ export default {
     },
     handleFilter(val){
       this.listQuery.pageNum=1
-      console.debug("sortVal:"+val)
-     if(val.startsWith('+')){
+      console.log("sortVal:"+val)
+    //  if(val instanceof String){
+      try {
+        if(val.startsWith('+')){
         this.listQuery.orderType = 'asc'
-      }else if(order.startsWith('-')){
+       }else if(val.startsWith('-')){
         this.listQuery.orderType = 'desc'
+       }
+       this.listQuery.orderKey = val.substring(1)
+      } catch (error) {
+        console.log(error)
       }
-      this.listQuery.orderKey = val.substring(1)
       this.fetchData()
     },
     handleDownload() {
@@ -229,13 +236,13 @@ export default {
     },
     sortChange(data){
       const { prop, order } = data
-      console.debug("prop:"+prop+" order:"+ order)
-      if(order.startsWith('+')){
-        this.listQuery.orderType = 'asc'
-      }else if(order.startsWith('-')){
-        this.listQuery.orderType = 'desc'
-      }
-      this.listQuery.orderKey = prop
+      console.error("prop:"+prop+" order:"+ order)
+      // if(order!=null&&order!=''&&order.startsWith('+')){
+        // this.listQuery.orderType = 'asc'
+      // }else if(order!=null&& order!=''&&order.startsWith('-')){
+        // this.listQuery.orderType = 'desc'
+      // }
+      // this.listQuery.orderKey = prop
       this.handleFilter()
     }
     // handleCurrentChange(val){
