@@ -177,7 +177,8 @@ export default {
         {label:'结课时间升序', key:'+endDate'},{label:'结课时间降序', key:'-endDate'},
         {label:'总价升序', key:'+totalPrice'},{label:'总价降序', key:'-totalPrice'},
       ],
-        downloadLoading: false
+      sourceType:[],
+      downloadLoading: false
     }
   },
   created() {
@@ -237,24 +238,8 @@ export default {
     sortChange(data){
       const { prop, order } = data
       console.error("prop:"+prop+" order:"+ order)
-      // if(order!=null&&order!=''&&order.startsWith('+')){
-        // this.listQuery.orderType = 'asc'
-      // }else if(order!=null&& order!=''&&order.startsWith('-')){
-        // this.listQuery.orderType = 'desc'
-      // }
-      // this.listQuery.orderKey = prop
       this.handleFilter()
     }
-    // handleCurrentChange(val){
-    //   console.log(`当前第${val}页`)
-    //   this.listQuery.pageNum=val
-    //   this.fetchData()
-    // },
-    // handleSizeChange(val){
-    //   console.log(`每页${val}条`)
-    //   this.listQuery.pageSize=val
-    //   this.fetchData()
-    // }
   },
 }
 </script>

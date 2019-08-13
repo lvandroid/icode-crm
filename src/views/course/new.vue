@@ -4,6 +4,11 @@
           <el-form-item label="课程名" >
               <el-input v-model="form.name" placeholder="" class="formItem"/>
           </el-form-item>
+          <!-- <el-form-item label="课程类型">
+              <el-radio-group v-model="type" v-for="(item, index) in courseType" :key="index" change="typeChange">
+                <el-radio-button label="{{item.name}}"/>
+              </el-radio-group>
+          </el-form-item> -->
           <el-form-item label="开课日期">
               <el-date-picker v-model="form.startDate" type="date" value-format="timestamp"></el-date-picker>
           </el-form-item>
@@ -49,7 +54,7 @@
 </template>
 
 <script>
-import { addCourse } from '@/api/course'
+import { addCourse, getAllCourseType } from '@/api/course'
 export default {
     data() {
         return {
@@ -65,8 +70,12 @@ export default {
                 actTotalPrice: '0.00',
                 actUnitPrice: '0.00',
                 classRef: '',
+                courseTypeId:'',
                 mark: '',
             },
+             courseType:[],
+             type:'',
+             courseId:'',
              classes:[
                 {
                     value: '小班',
@@ -143,6 +152,13 @@ export default {
                 console.error(error)
             })
         },
+        getCourseTypeList(){
+            getAllCourseType().then(response => {
+                this.sourceType = response.data
+            }).catch(error=>{
+                console.error(error)
+            })
+        },
         priceChange(){
             var totalP = this.form.totalPrice
             var courseS = this.form.courseSum
@@ -159,9 +175,16 @@ export default {
                 this.form.actUnitPrice = parseFloat(0.00).toFixed(2)
             }
         },
+        typeChange(val){
+
+        },
+        
         onCancel(){
 
         }
+    },
+    created() {
+        this.getCourseTypeList()
     },
 }
 </script>

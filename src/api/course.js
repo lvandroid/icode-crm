@@ -16,3 +16,22 @@ export function getCourse(data) {
     data
   })
 }
+
+export function getAllCourseType(){
+  return request(
+    {
+      url: '/api/courseType/list',
+      method: 'get',
+    }
+  )
+}
+
+export function getCourseTypeByName(data){
+  return request(
+    {
+      url: '/api/courseType/findByName',
+      'method': 'post',
+      data
+    }
+  )
+}
