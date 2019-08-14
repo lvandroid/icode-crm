@@ -8,10 +8,10 @@ export function addTeacher(data) {
   })
 }
 
-export function getTeachers(params) {
+export function getTeachers(data) {
   return request({
     url: '/api/teacher/list',
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }

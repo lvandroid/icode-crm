@@ -12,14 +12,14 @@
       <el-form-item label="课程">
         <!-- <el-checkbox label="全选" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox> -->
         <!-- <div style="margin: 15px 0;"></div> -->
-        <el-checkbox-group v-model="checkedCourses" @change="handleCheckedCourseChange">
+        <el-checkbox-group v-model="form.courseTypeIds" @change="handleCheckedCourseChange">
           <el-checkbox v-for="course in courseType" :key="course.id" :label="course.id">{{course.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="性别">
-        <el-radio-group v-model="form.sex">
-          <el-radio label="1">男</el-radio>
-          <el-radio label="0">女</el-radio>
+        <el-radio-group v-model="form.sex" @change="">
+          <el-radio label="1" name="1">男</el-radio>
+          <el-radio label="0" name="0">女</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="备注">
@@ -43,7 +43,7 @@ export default {
         name: '',
         entryDate: '',
         courseTypeIds: [],
-        sex: 0,
+        sex: '',
         desc: ''
       },
       //  isIndeterminate:true,
@@ -54,14 +54,20 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$refs.form.validate(valid => {
-          if (valid) {
-              this.$store.dispatch('user/addTeacher',this.form).then(() => {
-                this.$router.push("/teacher/select")
-              }).catch((error) => {
-                  console.error(error)
-              })
-          }
+      // this.$refs.form.validate(valid => {
+      //     if (valid) {
+      //         this.$store.dispatch('user/addTeacher',this.form).then(() => {
+      //           this.$router.push("/teacher/select")
+      //         }).catch((error) => {
+      //             console.error(error)
+      //         })
+      //     }
+      // })
+      addTeacher(this.form).then(response=>{
+          this.$router.push("/teacher/list")
+          console.log(response)
+      }).catch(error=>{
+          console.error(error)
       })
     },
     onCancel() {
@@ -76,8 +82,12 @@ export default {
       // console.log(this.checkedCourses)
     // },
     handleCheckedCourseChange(val){
-      this.form.courseTypeIds=val
-      console.log(this.form.courseTypeIds)
+      // this.form.courseTypeIds=val
+      debugger
+      console.log("typeof:"+typeof(val)+":"+this.form.courseTypeIds)
+    },
+    handleRadioChange(val){
+      this.form.sex = val
     },
     getCourseTypeList(){
             getAllCourseType().then(response => {
@@ -86,7 +96,7 @@ export default {
                 // datas.forEach(element => {
                 //     this.typeMap[element.name] = element.id
                 // });
-                console.log(this.courseType)
+                // console.log(this.courseType)
                 // console.log(this.typeMap)
             }).catch(error=>{
                 console.error(error)

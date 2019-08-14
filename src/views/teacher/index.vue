@@ -23,6 +23,18 @@
           <span>{{ scope.row.sex==0?"女":"男"}}</span>
         </template>
       </el-table-column>
+       <el-table-column label="入职时间" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.entryDate | parseTime('{y}-{m}-{d}')}}
+        </template>
+      </el-table-column>
+
+     </el-table-column>
+       <el-table-column label="课程类型" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.courseTypeNames }}
+        </template>
+      </el-table-column> 
       <!-- <el-table-column label="Pageviews" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.pageviews }}
@@ -46,6 +58,7 @@
 <script>
 import { getList } from '@/api/table'
 import { getTeachers } from '@/api/teacher'
+import { parseTime } from '@/utils'
 
 export default {
   filters: {
@@ -61,7 +74,18 @@ export default {
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
+      listQuery:{
+        pageNum: 1,
+        pageSize: 5,
+        name: '',
+        courseName:'',
+        courseTypeId:'',
+        mark: '', 
+        // sort: '+id',
+        orderKey: 'id',
+        orderType: 'desc'
+      },
     }
   },
   created() {
@@ -70,7 +94,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getTeachers().then(response => {
+      getTeachers(this.listQuery).then(response => {
         this.list = response.data
         this.listLoading = false
       })
