@@ -4,37 +4,22 @@
       <el-form-item label="姓名">
         <el-input v-model="form.name" class="formItem" />
       </el-form-item>
-      <!-- <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item> -->
       <el-form-item label="入职日期">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date" type="date" placeholder="Pick a date" style="width: 100%;" />
-        </el-col>
-        <!-- <el-col :span="2" class="line">-</el-col> -->
-        <!-- <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;" />
-        </el-col> -->
+        <!-- <el-col :span="11"> -->
+          <el-date-picker v-model="form.entryDate" type="date" value-format="timestamp" placeholder="选择日期"/>
+        <!-- </el-col> -->
       </el-form-item>
-      <!-- <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery" />
-      </el-form-item> -->
       <el-form-item label="课程">
-        <el-checkbox-group v-model="form.course">
-          <el-checkbox label="结构搭建" name="type" />
-          <el-checkbox label="Scrach" name="type" />
-          <el-checkbox label="App Inventor" name="type" />
-          <el-checkbox label="Python" name="type" />
-          <el-checkbox label="C++" name="type" />
+        <!-- <el-checkbox label="全选" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox> -->
+        <!-- <div style="margin: 15px 0;"></div> -->
+        <el-checkbox-group v-model="checkedCourses" @change="handleCheckedCourseChange">
+          <el-checkbox v-for="course in courseType" :key="course.id" :label="course.id">{{course.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="性别">
         <el-radio-group v-model="form.sex">
-          <el-radio label="男" />
-          <el-radio label="女" />
+          <el-radio label="1">男</el-radio>
+          <el-radio label="0">女</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="备注">
@@ -50,17 +35,21 @@
 
 <script>
 import { addTeacher } from '@/api/teacher'
-
+import { getAllCourseType } from '@/api/course'
 export default {
   data() {
     return {
       form: {
         name: '',
-        date: '',
-        course : [],
+        entryDate: '',
+        courseTypeIds: [],
         sex: 0,
         desc: ''
-      }
+      },
+      //  isIndeterminate:true,
+       checkedCourses:[],
+       courseType:[],
+      //  checkAll: false,
     }
   },
   methods: {
@@ -80,8 +69,33 @@ export default {
         message: 'cancel!',
         type: 'warning'
       })
-    }
-  }
+    },
+    // handleCheckAllChange(val){
+      // this.checkedCourses = val? this.courseType:[]
+      // this.isIndeterminate= false
+      // console.log(this.checkedCourses)
+    // },
+    handleCheckedCourseChange(val){
+      this.form.courseTypeIds=val
+      console.log(this.form.courseTypeIds)
+    },
+    getCourseTypeList(){
+            getAllCourseType().then(response => {
+                var datas = response.data
+                this.courseType = datas
+                // datas.forEach(element => {
+                //     this.typeMap[element.name] = element.id
+                // });
+                console.log(this.courseType)
+                // console.log(this.typeMap)
+            }).catch(error=>{
+                console.error(error)
+            })
+    },
+  },
+  created() {
+    this.getCourseTypeList()
+  },
 }
 </script>
 

@@ -50,15 +50,15 @@ export default {
                 },
                 classes:[
                 {
-                    value: 'a',
+                    value: '100',
                     label: '小班',
                 },
                 {
-                    value: 'b',
+                    value: '101',
                     label: '中班',
                 },
                 {
-                    value: 'c',
+                    value: '102',
                     label: '大班',
                 },
                 {

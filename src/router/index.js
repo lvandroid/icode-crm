@@ -65,14 +65,14 @@ export const constantRoutes = [
       {
         path: 'list',
         name: 'StudentList',
-        component: () => import('@/views/student/find'),
-        meta: { title: '查询', icon: 'table' }
+        component: () => import('@/views/student/index'),
+        meta: { title: '学员列表', icon: 'table' }
       },
       {
         path: 'add',
         name: 'AddStudent',
         component: () => import('@/views/student/add'),
-        meta: { title: '新增', icon: 'tree' }
+        meta: { title: '新增学员', icon: 'tree' }
       }
     ]
   },
@@ -80,21 +80,21 @@ export const constantRoutes = [
   {
     path: '/teacher',
     component: Layout,
-    redirect: '/teacher/select',
+    redirect: '/teacher/list',
     name: 'Teacher',
-    meta: { title: '老师', icon: 'form' },
+    meta: { title: '教师', icon: 'form' },
     children: [
       {
-        path: 'select',
+        path: 'list',
         name: 'TeacherList',
-        component: () => import('@/views/teacher/find'),
-        meta: { title: '查看', icon: 'form' }
+        component: () => import('@/views/teacher/index'),
+        meta: { title: '教师列表', icon: 'form' }
       },
       {
         path: 'add',
         name: 'AddTeacher',
         component: () => import('@/views/teacher/add'),
-        meta: { title: '入职', icon: 'form' }
+        meta: { title: '创建教师', icon: 'form' }
       }
     ]
   },
