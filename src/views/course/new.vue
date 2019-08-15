@@ -1,7 +1,7 @@
 <template>
     <div class="app-containter">
         <el-form :model="form" ref="form" label-width="120px">
-          <el-form-item label="课程名" >
+          <el-form-item label="班级" >
               <el-input v-model="form.name" placeholder="" class="formItem"/>
           </el-form-item>
           <el-form-item label="课程类型">

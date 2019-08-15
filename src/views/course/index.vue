@@ -40,7 +40,7 @@
           {{ scope.row.id }}
         </template>
       </el-table-column> -->
-      <el-table-column label="课程名" sortable prop="name" width="200">
+      <el-table-column label="班级" sortable prop="name" width="200">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>

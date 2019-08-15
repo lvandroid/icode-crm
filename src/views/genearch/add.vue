@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="姓名">
+      <el-form-item label="家长姓名">
         <el-input v-model="form.name" class="formItem" />
       </el-form-item>
       <el-form-item label="入职日期">

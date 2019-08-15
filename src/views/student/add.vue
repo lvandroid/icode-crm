@@ -47,6 +47,7 @@
 
 <script>
 import { addStudent } from '@/api/student'
+import { parseTime } from '@/utils'
 
 export default {
     data(){
@@ -57,6 +58,7 @@ export default {
                     grade: '',
                     sex: '',
                     phone: '',
+                    updateDate:'',
                     referId: '',
                     mark: '',
                 },
@@ -189,6 +191,7 @@ export default {
     methods:{
         onSubmit(){
             this.form.id=this.form.phone
+            this.form.updateDate = new Date().getTime()
             addStudent(this.form).then(response=>{
                 console.log(response)
                 this.$router.push("/student/list")
@@ -198,7 +201,7 @@ export default {
         },
         onCancel(){
             this.$message({
-                 message: 'cancel!',
+                message: 'cancel!',
                 type: 'warning'
             })
         },

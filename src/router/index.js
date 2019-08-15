@@ -126,19 +126,19 @@ export const constantRoutes = [
     component: Layout,
     rediredt: '/course/list',
     name: 'Course',
-    meta: { title: '课程', icon: 'table' },
+    meta: { title: '班级', icon: 'table' },
     children: [
       {
         path: 'list',
         name: 'CourseList',
         component: () => import('@/views/course/index'),
-        meta: { title: '课程列表', icon: 'list' }
+        meta: { title: '班级列表', icon: 'list' }
       },
       {
         path: 'add',
         name: 'AddCourse',
         component: () => import('@/views/course/new'),
-        meta: { title: '创建课程', icon: 'edit' }
+        meta: { title: '创建班级', icon: 'edit' }
       }
     ]
   },

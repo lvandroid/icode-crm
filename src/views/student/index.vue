@@ -57,7 +57,7 @@
       </el-table-column>
        <el-table-column label="登记时间" align="center" width="160" sortable prop="updateDate">
         <template slot-scope="scope">
-          {{ scope.row.updateDate | parseTime('{y}-{m}-{d}')}}
+          {{ scope.row.updateDate | parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}
         </template>
       </el-table-column>
        <el-table-column label="年级" align="center" width="320" sortable prop="grade">
