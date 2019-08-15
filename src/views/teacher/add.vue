@@ -16,8 +16,11 @@
           <el-checkbox v-for="course in courseType" :key="course.id" :label="course.id">{{course.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
+      <el-form-item label="手机号码" >
+        <el-input v-model="form.phone" placeholder="" class="formItem" maxlength="11" show-word-limit type="number"></el-input>
+      </el-form-item>
       <el-form-item label="性别">
-        <el-radio-group v-model="form.sex" @change="">
+        <el-radio-group v-model="form.sex">
           <el-radio label="1" name="1">男</el-radio>
           <el-radio label="0" name="0">女</el-radio>
         </el-radio-group>
@@ -83,7 +86,7 @@ export default {
     // },
     handleCheckedCourseChange(val){
       // this.form.courseTypeIds=val
-      debugger
+      // debugger
       console.log("typeof:"+typeof(val)+":"+this.form.courseTypeIds)
     },
     handleRadioChange(val){

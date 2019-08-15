@@ -183,7 +183,7 @@ export default {
         {label:'结课时间升序', key:'+endDate'},{label:'结课时间降序', key:'-endDate'},
         {label:'总价升序', key:'+totalPrice'},{label:'总价降序', key:'-totalPrice'},
       ],
-      sourceType:[],
+      // sourceType:[],
       downloadLoading: false
     }
   },
