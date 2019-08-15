@@ -35,46 +35,46 @@
       highlight-current-row
       @sort-change="sortChange"
     >
-      <!-- <el-table-column align="center" prop="id" label="ID" width="95">
+      <!-- <el-table-column align="center" sortable prop="id" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column> -->
-      <el-table-column label="课程名" prop="name" width="200">
+      <el-table-column label="课程名" sortable prop="name" width="200">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column label="课程类型" prop="courseTypeName" align="center" width="100">
+      <el-table-column label="课程类型" sortable  prop="courseTypeName" align="center" >
         <template slot-scope="scope">
           {{scope.row.courseTypeName}}
         </template>
       </el-table-column>
-      <el-table-column label="开课日期" width="200" prop="startDate" align="center">
+      <el-table-column label="开课日期" sortable width="200" prop="startDate" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.startDate | parseTime('{y}-{m}-{d}')}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="结课日期" width="200" align="center" prop="endDate">
+      <el-table-column label="结课日期" sortable width="200" align="center" prop="endDate">
         <template slot-scope="scope">
           <span>{{ scope.row.endDate | parseTime('{y}-{m}-{d}')}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课时数" width="80" align="center">
+      <el-table-column label="课时数" prop="courseSum" sortable align="center">
           <template slot-scope="scope">
               <span>
                   {{ scope.row.courseSum }}
               </span>
           </template>
       </el-table-column>
-       <el-table-column label="课程总价" width="120" prop="totalPrice" align="center">
+       <el-table-column label="课程总价" sortable  prop="totalPrice" align="center">
           <template slot-scope="scope">
               <span>
                   ￥{{ scope.row.totalPrice }}
               </span>
           </template>
       </el-table-column>
-       <el-table-column label="课程单价" width="80" align="center">
+       <el-table-column label="课程单价" sortable prop="unitPrice" align="center">
           <template slot-scope="scope">
               <span>
                   ￥{{ scope.row.unitPrice }}
@@ -204,7 +204,7 @@ export default {
     },
     handleFilter(val){
       this.listQuery.pageNum=1
-      console.log("sortVal:"+val)
+      // console.log("sortVal:"+val)
     //  if(val instanceof String){
       try {
         if(val.startsWith('+')){
@@ -214,7 +214,7 @@ export default {
        }
        this.listQuery.orderKey = val.substring(1)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       }
       this.fetchData()
     },
@@ -243,7 +243,7 @@ export default {
     },
     sortChange(data){
       const { prop, order } = data
-      console.error("prop:"+prop+" order:"+ order)
+      // console.error("prop:"+prop+" order:"+ order)
       this.handleFilter()
     }
   },

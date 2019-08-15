@@ -40,7 +40,7 @@
           <!-- {{ scope.row.id}} -->
         <!-- </template> -->
       <!-- </el-table-column> -->
-      <el-table-column label="姓名" width="120">
+      <el-table-column label="姓名" width="120" sortable prop="name">
         <template slot-scope="scope">
           {{ scope.row.name}}
         </template>
@@ -50,17 +50,17 @@
           {{ scope.row.phone}}
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="110" align="center">
+      <el-table-column label="性别" width="110" align="center" sortable prop="sex">
         <template slot-scope="scope">
           <span>{{ scope.row.sex==0?"女":"男"}}</span>
         </template>
       </el-table-column>
-       <el-table-column label="入职时间" align="center" width="160">
+       <el-table-column label="入职时间" align="center" width="160" sortable prop="entryDate">
         <template slot-scope="scope">
           {{ scope.row.entryDate | parseTime('{y}-{m}-{d}')}}
         </template>
       </el-table-column>
-       <el-table-column label="课程类型" align="center" width="320">
+       <el-table-column label="课程类型" align="center" width="320" sortable prop="courseTypeNames">
         <template slot-scope="scope">
           {{ scope.row.courseTypeNames }}
         </template>
