@@ -72,7 +72,29 @@ export const constantRoutes = [
         path: 'add',
         name: 'AddStudent',
         component: () => import('@/views/student/add'),
-        meta: { title: '新增学员', icon: 'tree' }
+        meta: { title: '新增学员', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/genearch',
+    component: Layout,
+    redirect: '/genearch/list',
+    name: 'Genearch',
+    meta: { title: '家长', icon: 'example' },
+    children: [
+      {
+        path: 'list',
+        name: 'GenearchList',
+        component: () => import('@/views/genearch/index'),
+        meta: { title: '家长列表', icon: 'table' }
+      },
+      {
+        path: 'add',
+        name: 'AddGenearch',
+        component: () => import('@/views/genearch/add'),
+        meta: { title: '新增家长', icon: 'form' }
       }
     ]
   },
@@ -88,7 +110,7 @@ export const constantRoutes = [
         path: 'list',
         name: 'TeacherList',
         component: () => import('@/views/teacher/index'),
-        meta: { title: '教师列表', icon: 'form' }
+        meta: { title: '教师列表', icon: 'table' }
       },
       {
         path: 'add',
