@@ -45,7 +45,7 @@
           {{ scope.row.name}}
         </template>
       </el-table-column>
-      <el-table-column label="手机号" align="center" width="160">
+      <el-table-column label="手机号" align="center" width="160" sortable prop="phone">
         <template slot-scope="scope">
           {{ scope.row.phone}}
         </template>
@@ -55,14 +55,14 @@
           <span>{{ scope.row.sex==0?"女":"男"}}</span>
         </template>
       </el-table-column>
-       <el-table-column label="入职时间" align="center" width="160" sortable prop="entryDate">
+       <el-table-column label="登记时间" align="center" width="160" sortable prop="updateDate">
         <template slot-scope="scope">
-          {{ scope.row.entryDate | parseTime('{y}-{m}-{d}')}}
+          {{ scope.row.updateDate | parseTime('{y}-{m}-{d}')}}
         </template>
       </el-table-column>
-       <el-table-column label="课程类型" align="center" width="320" sortable prop="courseTypeNames">
+       <el-table-column label="年级" align="center" width="320" sortable prop="grade">
         <template slot-scope="scope">
-          {{ scope.row.courseTypeNames }}
+          {{ scope.row.grade}}
         </template>
       </el-table-column> 
       <el-table-column label="备注" align="center">
@@ -92,8 +92,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
-import { getTeachers } from '@/api/teacher'
+import { getStudentList } from '@/api/student'
 import waves from '@/directive/waves'
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination'
@@ -120,10 +119,9 @@ export default {
         pageNum: 1,
         pageSize: 5,
         name: '',
-        courseName:'',
+        sex:'',
         phone: '',
-        courseTypeId:'',
-        mark: '', 
+        grade: '',
         // sort: '+id',
         orderKey: 'id',
         orderType: 'desc'
@@ -141,14 +139,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getTeachers(this.listQuery).then(response => {
+      getStudentList(this.listQuery).then(response => {
         this.list = response.data.list
         this.totalNum = response.total
         this.listLoading = false
       })
     },
     handleCreate(){
-      this.$router.push("/teacher/add")
+      this.$router.push("/student/add")
     },
     handleFilter(val){
       this.listQuery.pageNum=1
@@ -162,7 +160,7 @@ export default {
        }
        this.listQuery.orderKey = val.substring(1)
       } catch (error) {
-        console.error(error)
+        console.log(error)
       }
       this.fetchData()
     },
@@ -176,13 +174,13 @@ export default {
    handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['教师姓名','入职日期', '性别','手机号码','课程类型','备注']
-        const filterVal = ['name','entryDate', 'sex', 'phone', 'courseTypeNames','mark']
+        const tHeader = ['姓名','登记日期', '性别','手机号码','年级','备注']
+        const filterVal = ['name','updateDate', 'sex', 'phone', 'grade','mark']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '教师列表'
+          filename: '学员列表'
         })
         this.downloadLoading = false
       })

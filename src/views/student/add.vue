@@ -191,6 +191,7 @@ export default {
             this.form.id=this.form.phone
             addStudent(this.form).then(response=>{
                 console.log(response)
+                this.$router.push("/student/list")
             }).catch(error=>{
                 console.error(error)
             })
