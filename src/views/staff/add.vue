@@ -2,22 +2,22 @@
     <div class="app-container">
         <el-form :inline="false" ref="form" :rules="rules" :model="form" label-width="120px" >
             <el-row>
-              <el-col :span="6">
+              <el-col :span="12">
                   <el-form-item label="姓名" prop="name">
                     <el-input v-model="form.name" class="formItem" placeholder="输入姓名"></el-input>
                   </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="12">
                   <el-form-item label="花名" prop="nickName">
                     <el-input v-model="form.nickName" class="formItem" placeholder="输入花名"></el-input>
                   </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="12">
                   <el-form-item label="英文名" prop="nameEn">
                     <el-input v-model="form.nameEn" class="formItem" placeholder="输入英文名"></el-input>
                   </el-form-item>
               </el-col>
-               <el-col :span="6">
+               <el-col :span="12">
                     <el-form-item label="手机号码" prop="phone">
                     <el-input v-model="form.phone" class="formItem" show-word-limit  maxlength="11" placeholder="输入手机号码"></el-input>
                     </el-form-item>
@@ -25,7 +25,7 @@
             </el-row>
 
             <el-row>
-                <el-col :span="6">
+                <el-col :span="12">
                     <el-form-item label="手机号码" prop="phone">
                     <el-input v-model="form.phone" class="formItem" show-word-limit  maxlength="11" placeholder="输入手机号码"></el-input>
                     </el-form-item>
@@ -33,7 +33,7 @@
             </el-row>
            
 
-            <el-collapse>
+            <el-collapse class="colSpan">
                  <el-collapse-item accordion=false>
                         <span class="collapse-title" slot="title">更多员工信息</span>
                         <el-form-item label="年级">
@@ -49,8 +49,8 @@
                             </el-radio-group>
                         </el-form-item> 
                  </el-collapse-item>
-               </el-collapse>
-          <el-form-item label="选择年级">
+           </el-collapse>
+          <!-- <el-form-item label="选择年级">
             <el-select v-model="form.grade" filterable placeholder="请选择">
                 <el-option v-for="item in grades" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
@@ -61,7 +61,7 @@
                  <el-radio label="1" name="1">男</el-radio>
                  <el-radio label="0" name="0">女</el-radio>
               </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
 
          
           <el-form-item label="推荐人手机号码">
@@ -252,8 +252,7 @@ export default {
   text-align: center;
 }
 .colSpan{
-    color:blue;
-    font-size: 26pt
+    margin-bottom: 20px;
 }
 .collapse-title {
         text-align: center;
