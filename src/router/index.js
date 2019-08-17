@@ -78,23 +78,23 @@ export const constantRoutes = [
   },
 
   {
-    path: '/genearch',
+    path: '/staff',
     component: Layout,
-    redirect: '/genearch/list',
-    name: 'Genearch',
-    meta: { title: '家长', icon: 'example' },
+    redirect: '/staff/list',
+    name: 'Staff',
+    meta: { title: '员工', icon: 'example' },
     children: [
       {
         path: 'list',
-        name: 'GenearchList',
-        component: () => import('@/views/genearch/index'),
-        meta: { title: '家长列表', icon: 'table' }
+        name: 'StaffList',
+        component: () => import('@/views/staff/index'),
+        meta: { title: '员工列表', icon: 'table' }
       },
       {
         path: 'add',
-        name: 'AddGenearch',
-        component: () => import('@/views/genearch/add'),
-        meta: { title: '新增家长', icon: 'form' }
+        name: 'AddStaff',
+        component: () => import('@/views/staff/add'),
+        meta: { title: '新增员工', icon: 'form' }
       }
     ]
   },
