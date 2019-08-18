@@ -15,6 +15,13 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import * as filters from './filters' // global filters
+
+// 地址选择控件
+
+// import { pca, pcaa } from 'area-data'
+// import VueAreaLinkage from 'vue-area-linkage'
+// 引用外部模块
+// Vue.component('VueAreaLinkage', VueAreaLinkage)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
