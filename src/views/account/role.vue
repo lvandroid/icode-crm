@@ -13,7 +13,7 @@
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="说明">
+      <el-table-column align="center" label="说明">
         <template slot-scope="scope">
           {{ scope.row.description }}
         </template>
@@ -39,7 +39,7 @@
             placeholder="角色说明"
           />
         </el-form-item>
-        <el-form-item label="Menus">
+        <el-form-item label="菜单">
           <el-tree
             ref="tree"
             :check-strictly="checkStrictly"
