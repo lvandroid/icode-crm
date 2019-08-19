@@ -142,6 +142,21 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/account',
+    component: Layout,
+    rediredt: '/account/role',
+    name: 'Account',
+    meta: {title:'账号',icon:'table'},
+    children:[
+      {
+        path: 'list',
+        name: 'AccountList',
+        component: ()=> import('@/views/account/role'),
+        meta: {title: '角色管理',icon:'form'}
+      }
+    ]
+  },
   // {
   //   path: '/nested',
   //   component: Layout,

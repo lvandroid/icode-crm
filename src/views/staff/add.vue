@@ -39,24 +39,20 @@
                         </el-radio-group>
                     </el-form-item>
                    <el-form-item label="现居住地址" prop="addressNow">
-                        <el-row>
                           <el-col :span="10">
                             <el-cascader :options="options" v-model="selectedNowOptions"></el-cascader>
                           </el-col>
                           <el-col :span="14">
                             <el-input v-model="nowAddrDetail" class="formItem" placeholder="详细地址"></el-input>
                           </el-col>
-                        </el-row>
                     </el-form-item> 
                     <el-form-item label="身份证地址" prop="addressId">
-                        <el-row>
                           <el-col :span="10">
                             <el-cascader :options="options" v-model="selectedIdOptions"></el-cascader>
                           </el-col>
                           <el-col :span="14">
                             <el-input v-model="idAddrDetail" class="formItem" placeholder="详细地址"></el-input>
                           </el-col>
-                        </el-row>
                     </el-form-item>
                     <el-form-item label="紧急联系人二" prop="name">
                         <el-col :span="6">

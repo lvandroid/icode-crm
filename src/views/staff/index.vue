@@ -55,7 +55,7 @@
           <span>{{ scope.row.sex==0?"女":"男"}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="身份证号码" width="110" align="center" sortable prop="sex">
+      <el-table-column label="身份证号码" width="200" align="center" sortable prop="sex">
         <template slot-scope="scope">
             {{scope.row.idCardNo}}
         </template>
@@ -66,7 +66,7 @@
           {{ scope.row.entryDate| parseTime('{y}-{m}-{d} {h}:{m}:{s}')}}
         </template>
       </el-table-column>
-       <el-table-column label="紧急联系人一" align="center" width="320" sortable prop="grade">
+       <!-- <el-table-column label="紧急联系人一" align="center" width="320" sortable prop="grade">
         <template slot-scope="scope">
           {{ scope.row.emergencyOneName}}
         </template>
@@ -85,7 +85,7 @@
         <template slot-scope="scope">
           {{ scope.row.emergencyTwoPhone}}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="备注" align="center">
         <template slot-scope="scope">
           {{scope.row.mark}}
@@ -162,7 +162,7 @@ export default {
       })
     },
     handleCreate(){
-      this.$router.push("/student/add")
+      this.$router.push("/staff/add")
     },
     handleFilter(val){
       this.listQuery.pageNum=1
@@ -190,8 +190,8 @@ export default {
    handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['姓名','登记日期', '性别','手机号码','年级','备注']
-        const filterVal = ['name','updateDate', 'sex', 'phone', 'grade','mark']
+        const tHeader = ['姓名','入职日期', '性别','手机号码','备注']
+        const filterVal = ['name','entryDate', 'sex', 'phone', 'mark']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
