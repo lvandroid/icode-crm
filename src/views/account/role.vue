@@ -46,7 +46,7 @@
             :data="routesData"
             :props="defaultProps"
             show-checkbox
-            node-key="path"
+            node-key="id"
             class="permission-tree"
           />
         </el-form-item>
@@ -62,7 +62,7 @@
 <script>
 import path from 'path'
 // import { deepClone } from '@/utils'
-// import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
+import { getRoutes} from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -82,7 +82,7 @@ export default {
       checkStrictly: false,
       defaultProps: {
         children: 'children',
-        label: 'title'
+        label: 'label'
       }
     }
   },
@@ -123,8 +123,8 @@ export default {
 
         const data = {
           path: path.resolve(basePath, route.path),
-          title: route.meta && route.meta.title
-
+          title: route.meta && route.meta.title,
+          label: route.label
         }
 
         // recursive child routes
@@ -133,6 +133,7 @@ export default {
         }
         res.push(data)
       }
+      console.log(res)
       return res
     },
     generateArr(routes) {

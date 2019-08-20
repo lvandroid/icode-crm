@@ -1,7 +1,8 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { addTeacher,getTeachers } from '@/api/teacher'
-import { resetRouter } from '@/router'
+import { getRoutes } from '@/api/role'
+import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
@@ -42,6 +43,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
+        console.log(data)
+
 
         if (!data) {
           reject('Verification failed, please Login again.')
@@ -51,6 +54,8 @@ const actions = {
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        // resetRouter()
+        // getRoutes()
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -69,6 +74,17 @@ const actions = {
       }).catch(error => {
         reject(error)
       })
+    })
+  },
+
+  getRoutes(roleId){
+    getRoutes(roleId).then(response=>{
+      const accessRoutes = response.data
+      router.addRoutes(accessRoutes)
+         // reset visited views and cached views
+      dispatch('tagsView/delAllViews', null, { root: true })
+    }).catch(error=>{
+      console.error(error)
     })
   },
 
