@@ -2,12 +2,15 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { addTeacher,getTeachers } from '@/api/teacher'
 import { getRoutes } from '@/api/role'
-import router, { resetRouter } from '@/router'
+import router, { resetRouter,constantRoutes} from '@/router'
+import {replaceComponent} from '@/utils/common'
 
 const state = {
   token: getToken(),
   name: '',
-  avatar: ''
+  avatar: '',
+  routes: [],
+  addRoutes: []
 }
 
 const mutations = {
@@ -19,6 +22,10 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROUTES: (state, routes) => {
+    state.addRoutes = routes
+    state.routes = constantRoutes.concat(routes)
   }
 }
 
@@ -39,7 +46,7 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit, state,dispatch }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
@@ -50,12 +57,28 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
+        const { username, avatar, rootRoleId} = data
+        
+        commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
         // resetRouter()
-        // getRoutes()
+          getRoutes(rootRoleId).then(response=>{
+            const accessRoutes =[]
+             // reset visited views and cached views
+              response.data.forEach(router =>{
+               console.log(router)
+               replaceComponent(router,accessRoutes)
+             })
+             console.log(accessRoutes)
+            commit('SET_ROUTES', accessRoutes)
+            resetRouter()
+            router.addRoutes(accessRoutes)
+            // debugger
+            // console.log(router)
+          //  dispatch('tagsView/delAllViews', null, { root: true })
+          console.log(router)
+        }).catch(error=>{console.error(error)})
+        // getRouters(rootRoleId)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -63,6 +86,18 @@ const actions = {
     })
   },
 
+  // replaceComponent(routerData,routers){
+  //   var component = routerData.component
+  //   if(component){
+  //     routerData.component=componentMap[component]
+  //     routers.push(routerData)
+  //   } 
+  //   if(routerData.children){
+  //     routerData.children.forEach(child=>{
+  //       replaceComponent(child,routers)
+  //     })
+  //   }
+  // },
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
@@ -74,17 +109,6 @@ const actions = {
       }).catch(error => {
         reject(error)
       })
-    })
-  },
-
-  getRoutes(roleId){
-    getRoutes(roleId).then(response=>{
-      const accessRoutes = response.data
-      router.addRoutes(accessRoutes)
-         // reset visited views and cached views
-      dispatch('tagsView/delAllViews', null, { root: true })
-    }).catch(error=>{
-      console.error(error)
     })
   },
 
