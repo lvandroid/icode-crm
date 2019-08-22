@@ -61,8 +61,8 @@
 
 <script>
 import path from 'path'
-// import { deepClone } from '@/utils'
-import { getRoutes} from '@/api/role'
+import { deepClone } from '@/utils'
+import { getRoutes, getRoles} from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -93,12 +93,12 @@ export default {
   },
   created() {
     // Mock: get all routes and roles list from server
-    this.getRoutes()
+    this.getRouters()
     this.getRoles()
   },
   methods: {
-    async getRoutes() {
-      const res = await getRoutes()
+    async getRouters() {
+      const res = await getRoutes(this.$store.getters.rootRoleId)
       this.serviceRoutes = res.data
       this.routes = this.generateRoutes(res.data)
     },
@@ -109,6 +109,7 @@ export default {
 
     // Reshape the routes structure so that it looks the same as the sidebar
     generateRoutes(routes, basePath = '/') {
+      console.log(routes)
       const res = []
 
       for (let route of routes) {
@@ -133,7 +134,6 @@ export default {
         }
         res.push(data)
       }
-      console.log(res)
       return res
     },
     generateArr(routes) {

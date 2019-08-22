@@ -6,3 +6,10 @@ export function getRoutes(roleId){
             method:'get',
           })
 }
+
+export function getRoles(){
+  return request({
+    url: '/api/role/list',
+    method: 'get'
+  })
+}

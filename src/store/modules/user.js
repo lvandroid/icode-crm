@@ -10,6 +10,7 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
+  rootRoleId: '',
   routes: [],
   addRoutes: []
 }
@@ -27,6 +28,9 @@ const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
+  },
+  SET_ROOT_ROLE_ID: (state, rootId) => {
+    state.rootRoleId = rootId
   }
 }
 
@@ -76,6 +80,7 @@ const actions = {
         
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
+        commit('SET_ROOT_ROLE_ID', rootRoleId)
         // resetRouter()
           getRoutes(rootRoleId).then(response=>{
             resetRouter()
@@ -86,7 +91,7 @@ const actions = {
             accessRouters.forEach(r=>{
               router.options.routes.push(r)
             })
-            commit('SET_ROUTES', accessRouters)
+            commit('SET_ROUTES', router.options.routes)
             router.addRoutes(router.options.routes)
             dispatch('tagsView/delAllViews', null, { root: true })
             resolve()
