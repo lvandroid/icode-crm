@@ -2,8 +2,9 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { addTeacher,getTeachers } from '@/api/teacher'
 import { getRoutes } from '@/api/role'
-import router, { resetRouter,constantRoutes} from '@/router'
-import {replaceComponent} from '@/utils/common'
+import router, { resetRouter,constantRoutes,componentMap,metaMap} from '@/router'
+import store from '..';
+import { asyncRoutes } from '../../router';
 
 const state = {
   token: getToken(),
@@ -29,6 +30,23 @@ const mutations = {
   }
 }
 
+function replaceComponent(routerData,result){
+  var component = routerData.component
+  var meta = routerData.meta
+  if(component){
+    routerData.component=componentMap[component]
+  } 
+  if(meta){
+    routerData.meta = metaMap[meta]
+  }
+    result.push(routerData)
+  if(routerData.children){
+    routerData.children.forEach(child=>{
+      replaceComponent(child,[])
+    })
+  }
+}
+
 const actions = {
   // user login
   login({ commit }, userInfo) {
@@ -50,9 +68,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-        console.log(data)
-
-
         if (!data) {
           reject('Verification failed, please Login again.')
         }
@@ -63,29 +78,45 @@ const actions = {
         commit('SET_AVATAR', avatar)
         // resetRouter()
           getRoutes(rootRoleId).then(response=>{
-            const accessRoutes =[]
-             // reset visited views and cached views
-              response.data.forEach(router =>{
-               console.log(router)
-               replaceComponent(router,accessRoutes)
-             })
-             console.log(accessRoutes)
-            commit('SET_ROUTES', accessRoutes)
             resetRouter()
-            router.addRoutes(accessRoutes)
-            // debugger
-            // console.log(router)
-          //  dispatch('tagsView/delAllViews', null, { root: true })
-          console.log(router)
-        }).catch(error=>{console.error(error)})
+            var accessRouters =[] 
+            response.data.forEach(item=>{
+              replaceComponent(item,accessRouters)
+            })
+            accessRouters.forEach(r=>{
+              router.options.routes.push(r)
+            })
+            commit('SET_ROUTES', accessRouters)
+            router.addRoutes(router.options.routes)
+            dispatch('tagsView/delAllViews', null, { root: true })
+            resolve()
+          })
+            // const accessRoutes =[]
+            //  // reset visited views and cached views
+            //   response.data.forEach(router =>{
+            //   //  console.log(router)
+            //    replaceComponent(router,accessRoutes)
+            //  })
+            // // commit('SET_ROUTES', accessRoutes)
+            // // resetRouter()
+            //  console.log(accessRoutes)
+            //  console.log("添加前router")
+            //  console.log(router)
+           
+        // }).catch(error=>{console.error(error)})
         // getRouters(rootRoleId)
-        resolve(data)
+          // const accessRoutes = await dispatch('permission/generateRoutes',{root:true})
+                // generate accessible routes map based on roles
+      // const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
+          
+        
       }).catch(error => {
         reject(error)
       })
     })
   },
 
+ 
   // replaceComponent(routerData,routers){
   //   var component = routerData.component
   //   if(component){
@@ -101,14 +132,14 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      // logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         removeToken()
         resetRouter()
         resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      // }).catch(error => {
+        // reject(error)
+      // })
     })
   },
 
