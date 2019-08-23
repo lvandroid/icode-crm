@@ -16,7 +16,7 @@ NProgress.configure({
 
 const whiteList = ['/login'] // no redirect whitelist
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
 
@@ -35,7 +35,7 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.name
-      console.log("hasGetUserInfo")
+      console.log('hasGetUserInfo')
       console.log(hasGetUserInfo)
       if (hasGetUserInfo) {
         next()

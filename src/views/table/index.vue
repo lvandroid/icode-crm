@@ -8,19 +8,27 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column
+        align="center"
+        label="ID"
+        width="95"
+      >
         <template slot-scope="scope">
-          {{ scope.row.id}}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
       <el-table-column label="姓名">
         <template slot-scope="scope">
-          {{ scope.row.name}}
+          {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="110" align="center">
+      <el-table-column
+        label="性别"
+        width="110"
+        align="center"
+      >
         <template slot-scope="scope">
-          <span>{{ scope.row.sex==0?"女":"男"}}</span>
+          <span>{{ scope.row.sex==0?"女":"男" }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column label="Pageviews" width="110" align="center">
