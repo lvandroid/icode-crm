@@ -28,3 +28,11 @@ export function deleteRole(id) {
     method: 'delete'
   })
 }
+
+export function updateRole(id, data) {
+  return request({
+    url: `/api/role/update/${id}`,
+    method: 'put',
+    data
+  })
+}

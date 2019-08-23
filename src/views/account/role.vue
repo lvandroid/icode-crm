@@ -23,11 +23,11 @@
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑角色':'新建角色'">
       <el-form :model="role" label-width="80px" label-position="left">
         <el-form-item label="角色名">
-          <el-input v-model="form.role.name" placeholder="输入角色名" />
+          <el-input v-model="role.name" placeholder="输入角色名" />
         </el-form-item>
         <el-form-item label="角色说明">
           <el-input
-            v-model="form.role.description"
+            v-model="role.description"
             :autosize="{ minRows: 2, maxRows: 4}"
             type="textarea"
             placeholder="角色说明"
@@ -58,7 +58,13 @@
 <script>
 import path from "path";
 import { deepClone } from "@/utils";
-import { getRoutes, getRoles, addRole, deleteRole } from "@/api/role";
+import {
+  getRoutes,
+  getRoles,
+  addRole,
+  deleteRole,
+  updateRole
+} from "@/api/role";
 
 const defaultRole = {
   id: "",
@@ -240,23 +246,26 @@ export default {
       const checkedKeys = this.$refs.tree
         .getCheckedKeys()
         .concat(this.$refs.tree.getHalfCheckedKeys());
-      console.log(checkedKeys);
-      this.role.routes = this.generateTree(
-        deepClone(this.serviceRoutes),
-        "/",
-        checkedKeys
-      );
+      // this.role.routes = this.generateTree(
+      // deepClone(this.serviceRoutes),
+      // "/",
+      // checkedKeys
+      // );
 
       if (isEdit) {
-        await updateRole(this.role.id, this.role);
-        for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].id === this.role.id) {
-            this.rolesList.splice(index, 1, Object.assign({}, this.role));
-            break;
-          }
-        }
+        this.form.role.name = this.role.name;
+        this.form.role.description = this.role.description;
+        this.form.role.id = this.role.id;
+        this.form.routerIds = checkedKeys;
+        await updateRole(this.role.id, this.form);
+        // for (let index = 0; index < this.rolesList.length; index++) {
+        //   if (this.rolesList[index].id === this.role.id) {
+        //     this.rolesList.splice(index, 1, Object.assign({}, this.role));
+        //     break;
+        //   }
+        // }
+        this.getRoles();
       } else {
-        debugger;
         this.form.routeIds = this.$refs.tree
           .getCheckedKeys()
           .concat(this.$refs.tree.getHalfCheckedKeys());
@@ -269,7 +278,6 @@ export default {
         this.getRoles();
       }
 
-      debugger;
       const { description, key, name, id } = this.role;
       this.dialogVisible = false;
       this.$notify({
