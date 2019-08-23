@@ -21,3 +21,10 @@ export function addRole(data) {
     data
   })
 }
+
+export function deleteRole(id) {
+  return request({
+    url: `/api/role/delete/${id}`,
+    method: 'delete'
+  })
+}
