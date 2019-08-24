@@ -58,7 +58,7 @@
           label="用户名"
           width="320"
         >
-          <template slot-scope="scope">{{ scope.row.name }}</template>
+          <template slot-scope="scope">{{ scope.row.username }}</template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -66,6 +66,14 @@
           width="400"
         >
           <template slot-scope="scope">{{ scope.row.password }}</template>
+        </el-table-column>
+
+        <el-table-column
+          align="center"
+          label="角色"
+          width="400"
+        >
+          <template slot-scope="scope">{{ scope.row.roles }}</template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -94,6 +102,66 @@
         :limit.sync="listQuery.pageSize"
         @pagination="fetchData"
       />
+
+      <el-dialog
+        :visible.sync="dialogVisible"
+        :title="dialogType==='edit'?'编辑用户':'新建用户'"
+      >
+        <el-form
+          :model="user"
+          label-width="80px"
+          label-position="left"
+        >
+          <el-form-item label="用户名">
+            <el-input
+              v-model="user.username"
+              placeholder="输入用户名"
+            />
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-input
+              v-model="user.password"
+              maxlength="10"
+              show-password
+              placeholder="密码"
+            />
+          </el-form-item>
+          <el-form-item label="角色">
+            <!-- <el-tree
+              ref="tree"
+              include-half-checked="true"
+              :check-strictly="checkStrictly"
+              :data="routesData"
+              :props="defaultProps"
+              show-checkbox
+              node-key="id"
+              class="permission-tree"
+              @check-change="getCheckedRoute"
+            /> -->
+            <el-select
+              v-model="roleName"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in roles"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div style="text-align:right;">
+          <el-button
+            type="danger"
+            @click="dialogVisible=false"
+          >取消</el-button>
+          <el-button
+            type="primary"
+            @click="confirmUser"
+          >保存</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -102,6 +170,16 @@
 import Pagination from '@/components/Pagination'
 import waves from '@/directive/waves'
 import { parseTime } from '@/utils'
+import { addUser, getUserList, deleteUser, updateUser } from '@/api/user'
+
+const defaultUser = {
+  id: '',
+  username: '',
+  password: '',
+  // routes: [],
+  roleIds: []
+}
+
 export default {
   components: { Pagination },
   directives: { waves },
@@ -116,24 +194,41 @@ export default {
         orderKey: 'id',
         orderType: 'desc'
       },
+      user: Object.assign({}, defaultUser),
       value: '',
       sortOptions: [
         { label: '默认', key: '-id' },
         { label: '倒序', key: '+id' }
       ],
+      user: {
+        name: '',
+        password: ''
+      },
+      roles: [],
+      roleName: '',
+      dialogVisible: false,
+      dialogType: 'new',
       downloadLoading: false
     }
   },
 
   created() {
-    this.fetchData()
+    this.getUsers()
+    this.getRoles()
   },
   methods: {
+    async getUsers() {
+      this.listLoading = false
+    },
+    async getRoles() {},
     fetchData() {
-      this.listLoading = true
+      this.listLoading = false
     },
     handleCreate() {
-      this.$router.push('/staff/add')
+      this.user = Object.assign({}, defaultUser)
+      this.dialogType = 'new'
+      this.dialogVisible = true
+      // this.$router.push('/staff/addStaff')
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1
@@ -157,6 +252,8 @@ export default {
       console.error('prop:' + prop + ' order:' + order)
       this.handleFilter()
     },
+
+    confirmUser() {},
 
     handleDownload() {
       this.downloadLoading = true

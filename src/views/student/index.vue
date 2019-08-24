@@ -204,7 +204,8 @@ export default {
       },
       value: '',
       sortOptions: [
-        { label: '默认', key: '-id' }, { label: '倒序', key: '+id' }
+        { label: '默认', key: '-id' },
+        { label: '倒序', key: '+id' }
       ],
       downloadLoading: false
     }
@@ -222,7 +223,7 @@ export default {
       })
     },
     handleCreate() {
-      this.$router.push('/student/add')
+      this.$router.push('/student/addStudent')
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1
@@ -251,7 +252,14 @@ export default {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = ['姓名', '登记日期', '性别', '手机号码', '年级', '备注']
-        const filterVal = ['name', 'updateDate', 'sex', 'phone', 'grade', 'mark']
+        const filterVal = [
+          'name',
+          'updateDate',
+          'sex',
+          'phone',
+          'grade',
+          'mark'
+        ]
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
@@ -262,13 +270,15 @@ export default {
       })
     },
     formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'startDate' || j === 'endDate') {
-          return parseTime(v[j], '{y}-{m}-{d}')
-        } else {
-          return v[j]
-        }
-      }))
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'startDate' || j === 'endDate') {
+            return parseTime(v[j], '{y}-{m}-{d}')
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   }
 }

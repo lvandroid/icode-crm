@@ -244,7 +244,7 @@ export default {
       })
     },
     handleCreate() {
-      this.$router.push('/staff/add')
+      this.$router.push('/staff/addStaff')
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1
