@@ -31,6 +31,16 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [{
+  path: '/redirect',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: '/redirect/:path*',
+    component: () => import('@/views/redirect/index')
+  }]
+},
+
+{
   path: '/login',
   component: () => import('@/views/login/index'),
   hidden: true
@@ -54,84 +64,141 @@ export const constantRoutes = [{
       title: '管理后台',
       icon: 'dashboard'
     }
-  }]
-},
+  }
 
-// {
-//   path: '/nested',
-//   component: Layout,
-//   redirect: '/nested/menu1',
-//   name: 'Nested',
-//   meta: {
-//     title: 'Nested',
-//     icon: 'nested'
-//   },
-//   children: [
-//     {
-//       path: 'menu1',
-//       component: () => import('@/views/nested/menu1/index'), // Parent router-view
-//       name: 'Menu1',
-//       meta: { title: 'Menu1' },
-//       children: [
-//         {
-//           path: 'menu1-1',
-//           component: () => import('@/views/nested/menu1/menu1-1'),
-//           name: 'Menu1-1',
-//           meta: { title: 'Menu1-1' }
-//         },
-//         {
-//           path: 'menu1-2',
-//           component: () => import('@/views/nested/menu1/menu1-2'),
-//           name: 'Menu1-2',
-//           meta: { title: 'Menu1-2' },
-//           children: [
-//             {
-//               path: 'menu1-2-1',
-//               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-//               name: 'Menu1-2-1',
-//               meta: { title: 'Menu1-2-1' }
-//             },
-//             {
-//               path: 'menu1-2-2',
-//               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-//               name: 'Menu1-2-2',
-//               meta: { title: 'Menu1-2-2' }
-//             }
-//           ]
-//         },
-//         {
-//           path: 'menu1-3',
-//           component: () => import('@/views/nested/menu1/menu1-3'),
-//           name: 'Menu1-3',
-//           meta: { title: 'Menu1-3' }
-//         }
-//       ]
-//     },
-//     {
-//       path: 'menu2',
-//       component: () => import('@/views/nested/menu2/index'),
-//       meta: { title: 'menu2' }
-//     }
-//   ]
-// },
-
-// {
-//   path: 'external-link',
-//   component: Layout,
-//   children: [
-//     {
-//       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-//       meta: { title: 'External Link', icon: 'link' }
-//     }
-//   ]
-// },
-
-// 404 page must be placed at the end !!!
-{
-  path: '*',
-  redirect: '/404',
-  hidden: true
+  ]
 }
+
+  // {
+  //   path: '/nested',
+  //   component: Layout,
+  //   redirect: '/nested/menu1',
+  //   name: 'Nested',
+  //   meta: {
+  //     title: 'Nested',
+  //     icon: 'nested'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'menu1',
+  //       component: () => import('@/views/nested/menu1/index'), // Parent router-view
+  //       name: 'Menu1',
+  //       meta: { title: 'Menu1' },
+  //       children: [
+  //         {
+  //           path: 'menu1-1',
+  //           component: () => import('@/views/nested/menu1/menu1-1'),
+  //           name: 'Menu1-1',
+  //           meta: { title: 'Menu1-1' }
+  //         },
+  //         {
+  //           path: 'menu1-2',
+  //           component: () => import('@/views/nested/menu1/menu1-2'),
+  //           name: 'Menu1-2',
+  //           meta: { title: 'Menu1-2' },
+  //           children: [
+  //             {
+  //               path: 'menu1-2-1',
+  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+  //               name: 'Menu1-2-1',
+  //               meta: { title: 'Menu1-2-1' }
+  //             },
+  //             {
+  //               path: 'menu1-2-2',
+  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+  //               name: 'Menu1-2-2',
+  //               meta: { title: 'Menu1-2-2' }
+  //             }
+  //           ]
+  //         },
+  //         {
+  //           path: 'menu1-3',
+  //           component: () => import('@/views/nested/menu1/menu1-3'),
+  //           name: 'Menu1-3',
+  //           meta: { title: 'Menu1-3' }
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'menu2',
+  //       component: () => import('@/views/nested/menu2/index'),
+  //       meta: { title: 'menu2' }
+  //     }
+  //   ]
+  // },
+
+  // {
+  //   path: 'external-link',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+  //       meta: { title: 'External Link', icon: 'link' }
+  //     }
+  //   ]
+  // },
+
+  // 404 page must be placed at the end !!!
+  // {
+  //   path: '/system',
+  //   component: Layout,
+  //   redirect: '/system/user',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'system',
+  //   meta: {
+  //     title: '系统设置',
+  //     icon: 'example',
+  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //   },
+  //   children: [
+
+  //     // {
+  //     //   path: 'test',
+  //     //   component: () => import('@/views/test/test'),
+  //     //   name: 'test',
+  //     //   meta: {
+  //     //     title: '测试页面',
+  //     //     roles: ['admin']
+  //     //   }
+  //     // },
+  //     {
+  //       path: 'user',
+  //       component: () => import('@/views/system/user'),
+  //       name: 'user',
+  //       meta: {
+  //         title: '用户管理',
+  //         roles: ['admin', 'editor']
+  //       }
+  //     },
+  //     {
+  //       path: 'role',
+  //       component: () => import('@/views/system/role'),
+  //       name: 'roles',
+  //       meta: {
+  //         title: '角色管理',
+  //         roles: ['admin']
+  //       }
+  //     },
+  //     {
+  //       path: 'permission',
+  //       component: () => import('@/views/system/permission'),
+  //       name: 'permission',
+  //       meta: {
+  //         title: '权限列表',
+  //         roles: ['admin']
+  //       }
+  //     },
+  //     {
+  //       path: 'button',
+  //       component: () => import('@/views/system/button'),
+  //       name: 'button',
+  //       meta: {
+  //         title: '按钮配置',
+  //         roles: ['admin']
+  //       }
+  //     }
+  //   ]
+  // }
 ]
 
 export const asyncRoutes = [{
@@ -281,6 +348,11 @@ export const asyncRoutes = [{
     }
   }
   ]
+},
+{
+  path: '*',
+  redirect: '/404',
+  hidden: true
 }
 ]
 

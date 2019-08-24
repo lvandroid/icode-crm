@@ -6,7 +6,11 @@
     >新建角色</el-button>
 
     <el-table
+      v-loading="listLoading"
       :data="rolesList"
+      element-loading-text="Loading"
+      fit
+      highlight-current-row
       style="width: 100%;margin-top:30px;"
       border
     >
@@ -122,6 +126,7 @@ const defaultRole = {
 export default {
   data() {
     return {
+      listLoading: true,
       role: Object.assign({}, defaultRole),
       routes: [],
       rolesList: [],
@@ -160,6 +165,7 @@ export default {
     },
     async getRoles() {
       const res = await getRoles()
+      this.listLoading = false
       this.rolesList = res.data
     },
 

@@ -131,12 +131,25 @@ const actions = {
           accessRouters.forEach(r => {
             router.options.routes.push(r)
           })
-          commit('SET_ROUTES', router.options.routes)
-          router.addRoutes(router.options.routes)
-          console.log(router)
-          dispatch('tagsView/delAllViews', null, {
-            root: true
+          router.options.routes.push({
+            path: '*',
+            redirect: '/404',
+            hidden: true
           })
+          commit('SET_ROUTES', router.options.routes)
+          // localStorage.setItem('servericeRoutes', router.options.routes)
+          console.log(router.options.routes)
+          // router.addRoutes(router.options.routes)
+          accessRouters.concat({
+            path: '*',
+            redirect: '/404',
+            hidden: true
+          })
+          router.addRoutes(accessRouters)
+          console.log(router)
+          // dispatch('tagsView/delAllViews', null, {
+          //   root: true
+          // })
           resolve()
         })
         // const accessRoutes =[]

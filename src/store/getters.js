@@ -1,4 +1,6 @@
-import { stat } from "fs";
+import {
+  stat
+} from 'fs'
 
 const getters = {
   sidebar: state => state.app.sidebar,
@@ -12,6 +14,7 @@ const getters = {
   introduction: state => state.user.introduction,
   roles: state => state.user.roles,
   rootRoleId: state => state.user.rootRoleId,
+  serviceRoutes: state => state.user.addRoutes,
   permission_routes: state => state.permission.routes,
   errorLogs: state => state.errorLog.logs
 }

@@ -185,6 +185,9 @@
       :limit.sync="listQuery.pageSize"
       @pagination="fetchData"
     />
+
+    <el-dialog :title="dialogType==='edit'?'编辑角色':'新建角色'" />
+
   </div>
 </template>
 
@@ -212,6 +215,8 @@ export default {
       list: null,
       totalNum: 0,
       listLoading: true,
+      dialogVisible: false,
+      dialogType: 'new',
       listQuery: {
         pageNum: 1,
         pageSize: 5,
@@ -220,7 +225,8 @@ export default {
       },
       value: '',
       sortOptions: [
-        { label: '默认', key: '-id' }, { label: '倒序', key: '+id' }
+        { label: '默认', key: '-id' },
+        { label: '倒序', key: '+id' }
       ],
       downloadLoading: false
     }
@@ -278,13 +284,15 @@ export default {
       })
     },
     formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'startDate' || j === 'endDate') {
-          return parseTime(v[j], '{y}-{m}-{d}')
-        } else {
-          return v[j]
-        }
-      }))
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'startDate' || j === 'endDate') {
+            return parseTime(v[j], '{y}-{m}-{d}')
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   }
 }
