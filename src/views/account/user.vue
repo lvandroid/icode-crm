@@ -41,9 +41,9 @@
         <el-table-column align="center" label="用户名" width="320">
           <template slot-scope="scope">{{ scope.row.username }}</template>
         </el-table-column>
-        <el-table-column align="center" label="密码" width="400">
+        <!-- <el-table-column align="center" label="密码" width="400">
           <template slot-scope="scope">{{ scope.row.password }}</template>
-        </el-table-column>
+        </el-table-column>-->
 
         <el-table-column align="center" label="角色" width="400">
           <template slot-scope="scope">{{ scope.row.roleNames}}</template>
@@ -51,6 +51,7 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="handleEdit(scope)">编辑</el-button>
+            <el-button type="primary" size="small" @click="changePassword(scope)">修改密码</el-button>
             <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
           </template>
         </el-table-column>
@@ -62,18 +63,24 @@
         :v-show="totalNum>0"
         :page.sync="listQuery.pageNum"
         :limit.sync="listQuery.pageSize"
-        @pagination="fetchData"
+        @pagination="getUsers"
       />
 
       <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新建用户'">
         <el-form :model="user" label-width="80px" label-position="left">
           <el-form-item label="用户名">
-            <el-input v-model="user.username" placeholder="输入用户名" />
+            <el-input v-model="user.username" placeholder="输入用户名" :disabled="usernameDisable" />
           </el-form-item>
           <el-form-item label="密码">
-            <el-input v-model="user.password" maxlength="10" show-password placeholder="密码" />
+            <el-input
+              v-model="user.password"
+              maxlength="10"
+              show-password
+              placeholder="密码"
+              :disabled="!changePwd&&usernameDisable"
+            />
           </el-form-item>
-          <el-form-item label="角色">
+          <el-form-item label="角色" v-if="!changePwd">
             <!-- <el-tree
               ref="tree"
               include-half-checked="true"
@@ -85,8 +92,28 @@
               class="permission-tree"
               @check-change="getCheckedRoute"
             />-->
-            <el-select ref="select" v-model="roleName" placeholder="请选择">
+            <el-select
+              ref="select"
+              v-model="roleName"
+              placeholder="请选择主角色"
+              @change="chooseMainRole"
+            >
               <el-option v-for="item in roles" :key="item.id" :value="item.id" :label="item.name" />
+            </el-select>
+            <el-select
+              ref="otherSelect"
+              multiple
+              :multiple-limit="2"
+              :disabled="otherRoleDisable"
+              v-model="otherRoleNames"
+              placeholder="请选择其他角色"
+            >
+              <el-option
+                v-for="item in otherRoles"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
+              />
             </el-select>
           </el-form-item>
         </el-form>
@@ -103,8 +130,15 @@
 import Pagination from "@/components/Pagination";
 import waves from "@/directive/waves";
 import { parseTime } from "@/utils";
-import { addUser, getUserList, deleteUser, updateUser } from "@/api/user";
+import {
+  addUser,
+  getUserList,
+  deleteUser,
+  updateUser,
+  updatePwd
+} from "@/api/user";
 import { getRoles } from "@/api/role";
+import { deepClone } from "@/utils";
 
 const defaultUser = {
   id: "",
@@ -150,8 +184,13 @@ export default {
       //   password: ''
       // },
       roles: [],
+      otherRoles: [],
       roleName: "",
+      otherRoleNames: "",
+      otherRoleDisable: true,
       dialogVisible: false,
+      usernameDisable: true,
+      changePwd: false,
       dialogType: "new",
       downloadLoading: false
     };
@@ -161,15 +200,22 @@ export default {
     this.getUsers();
     this.getRoles();
   },
+  // watch: {
+  //   roleName: function(newValue, oldValue) {
+  //     this.otherRoleNames = null;
+  //   }
+  // },
   methods: {
     async getUsers() {
       const res = await getUserList(this.listQuery);
       this.list = res.data.list;
       this.listLoading = false;
+      this.totalNum = res.data.total;
     },
     async getRoles() {
       const res = await getRoles();
       this.roles = res.data;
+      this.otherRoles = res.data;
       this.listLoading = false;
     },
     fetchData() {},
@@ -177,7 +223,65 @@ export default {
       this.user = Object.assign({}, defaultUser);
       this.dialogType = "new";
       this.dialogVisible = true;
+      this.changePwd = false;
+      this.usernameDisable = false;
       // this.$router.push('/staff/addStaff')
+    },
+    handleEdit(scope) {
+      this.dialogType = "edit";
+      this.dialogVisible = true;
+      this.usernameDisable = true;
+      this.changePwd = false;
+      this.user = deepClone(scope.row);
+      this.$nextTick(() => {});
+    },
+    changePassword(scope) {
+      this.dialogType = "edit";
+      this.changePwd = true;
+      this.dialogVisible = true;
+      this.usernameDisable = true;
+      this.user = deepClone(scope.row);
+      this.user.password = "";
+      this.$nextTick(() => {});
+    },
+    handleDelete({ $index, row }) {
+      this.$confirm("确定要删除账号吗？", "注意", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const name = await this.$store.getters.name;
+          if (row.username === name) {
+            this.$message({
+              message: "不能删除自己",
+              type: "error"
+            });
+          } else {
+            await deleteUser(row.id);
+            this.list.splice($index, 1);
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+            this.getUsers();
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    chooseMainRole(chooseId) {
+      this.otherRoles = [];
+      this.otherRoles = this.otherRoles.concat(this.roles);
+      for (let index = 0; index < this.roles.length; index++) {
+        const { id } = this.roles[index];
+        if (id === chooseId) {
+          this.otherRoles.splice(index, 1);
+          break;
+        }
+      }
+      this.otherRoleDisable = false;
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1;
@@ -204,8 +308,6 @@ export default {
 
     async confirmUser() {
       const isEdit = this.dialogType === "edit";
-      const checkedRoleId = this.$refs.select.value;
-
       if (isEdit) {
       } else {
         this.user.roleIds = [];

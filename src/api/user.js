@@ -55,3 +55,11 @@ export function updateUser(id, data) {
     data
   })
 }
+
+export function updatePwd(id, data) {
+  return request({
+    url: `/api/user/updatePwd/${id}`,
+    method: 'put',
+    data
+  })
+}

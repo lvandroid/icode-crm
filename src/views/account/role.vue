@@ -209,7 +209,7 @@ export default {
       });
     },
     handleDelete({ $index, row }) {
-      this.$confirm("确定删除角色吗?", "Warning", {
+      this.$confirm("确定删除角色吗?", "注意", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
