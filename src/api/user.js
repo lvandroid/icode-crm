@@ -63,3 +63,11 @@ export function updatePwd(id, data) {
     data
   })
 }
+
+export function updateRoles(id, data) {
+  return request({
+    url: `/api/user/updateRoles/${id}`,
+    method: 'put',
+    data
+  })
+}
