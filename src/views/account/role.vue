@@ -276,13 +276,13 @@ export default {
         // }
         this.getRoles();
       } else {
-        this.form.routeIds = this.$refs.tree
+        this.form.routerIds = this.$refs.tree
           .getCheckedKeys()
           .concat(this.$refs.tree.getHalfCheckedKeys());
+        this.form.role.id = this.role.id;
+        this.form.role.name = this.role.name;
+        this.form.role.description = this.role.description;
         const { data } = await addRole(this.form);
-        this.role.id = this.form.role.id;
-        this.role.name = this.form.role.name;
-        this.role.description = this.form.role.description;
         // this.role.id = data.role.id;
         // this.rolesList.push(this.form.role);
         this.getRoles();

@@ -1,7 +1,13 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.name" class="filter-item" style="width:200px" placeholder="用户名" />
+      <el-input
+        v-model="listQuery.username"
+        class="filter-item"
+        style="width:200px"
+        placeholder="用户名"
+        @keyup.enter.native="handleFilter"
+      />
       <el-button
         v-waves
         class="filter-item"
@@ -175,6 +181,7 @@ export default {
         pageNum: 1,
         pageSize: 5,
         orderKey: "id",
+        username: "",
         orderType: "desc"
       },
       form: {
@@ -318,7 +325,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      this.fetchData();
+      this.getUsers();
     },
 
     sortChange(data) {
