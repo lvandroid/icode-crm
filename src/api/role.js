@@ -7,6 +7,20 @@ export function getRoutes(roleId) {
   })
 }
 
+export function getAllPermissions() {
+  return request({
+    url: '/api/permission/list',
+    method: 'get'
+  })
+}
+
+export function getRolePermissions(roleId) {
+  return request({
+    url: `/api/permission/list/${roleId}`,
+    method: 'get'
+  })
+}
+
 export function getRoles() {
   return request({
     url: '/api/role/list',

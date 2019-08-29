@@ -15,7 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import * as filters from './filters' // global filters
-
+// 将权限检查注册到全局
+import permission from '@/directive/permission/permission.js' // 权限判断指令
 // 地址选择控件
 
 // import { pca, pcaa } from 'area-data'
@@ -38,8 +39,9 @@ if (process.env.NODE_ENV === 'production') {
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, {
-  locale
+  locale,
 })
+Vue.directive('permission', permission)
 
 Vue.config.productionTip = false
 

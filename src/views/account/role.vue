@@ -42,17 +42,33 @@
           />
         </el-form-item>
         <el-form-item label="菜单">
-          <el-tree
-            ref="tree"
-            include-half-checked="true"
-            :check-strictly="checkStrictly"
-            :data="routesData"
-            :props="defaultProps"
-            show-checkbox
-            node-key="id"
-            class="permission-tree"
-            @check-change="getCheckedRoute"
-          />
+          <el-col :span="12">
+            <el-tree
+              ref="tree"
+              include-half-checked="true"
+              :check-strictly="checkStrictly"
+              :data="routesData"
+              :props="defaultProps"
+              show-checkbox
+              node-key="id"
+              default-expand-all
+              class="permission-tree"
+              @check-change="getCheckedRoute"
+            />
+          </el-col>
+          <el-col :span="12">
+            <el-tree
+              ref="permTree"
+              include-half-checked="true"
+              :check-strictly="checkStrictly"
+              :data="permissions"
+              :props="defaultProps"
+              show-checkbox
+              default-expand-all
+              node-key="id"
+              class="permission-tree"
+            />
+          </el-col>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -68,6 +84,8 @@ import path from "path";
 import { deepClone } from "@/utils";
 import {
   getRoutes,
+  getAllPermissions,
+  getRolePermissions,
   getRoles,
   addRole,
   deleteRole,
@@ -79,7 +97,8 @@ const defaultRole = {
   name: "",
   description: "",
   // routes: [],
-  routerIds: []
+  routerIds: [],
+  permissionIds: []
 };
 
 export default {
@@ -88,6 +107,7 @@ export default {
       listLoading: true,
       role: Object.assign({}, defaultRole),
       routes: [],
+      permissions: [],
       rolesList: [],
       dialogVisible: false,
       dialogType: "new",
@@ -98,7 +118,8 @@ export default {
           name: "",
           description: ""
         },
-        routerIds: []
+        routerIds: [],
+        permissionIds: []
       },
       defaultProps: {
         children: "children",
@@ -115,12 +136,17 @@ export default {
     // Mock: get all routes and roles list from server
     this.getRouters();
     this.getRoles();
+    this.getPermissions();
   },
   methods: {
     async getRouters() {
       const res = await getRoutes(this.$store.getters.rootRoleId);
       this.serviceRoutes = res.data;
       this.routes = this.generateRoutes(res.data);
+    },
+    async getPermissions() {
+      const res = await getAllPermissions();
+      this.permissions = this.generatePermissions(res.data);
     },
     async getRoles() {
       const res = await getRoles();
@@ -170,6 +196,21 @@ export default {
       }
       return res;
     },
+
+    generatePermissions(permissions) {
+      const res = [];
+      for (let perm of permissions) {
+        const data = {
+          label: perm.description,
+          id: perm.id
+        };
+        if (perm.children) {
+          data.children = this.generatePermissions(perm.children);
+        }
+        res.push(data);
+      }
+      return res;
+    },
     generateArr(routes) {
       let data = [];
       routes.forEach(route => {
@@ -188,6 +229,9 @@ export default {
       if (this.$refs.tree) {
         this.$refs.tree.setCheckedNodes([]);
       }
+      if (this.$refs.permTree) {
+        this.$refs.permTree.setCheckedNodes([]);
+      }
       this.dialogType = "new";
       this.dialogVisible = true;
     },
@@ -203,6 +247,12 @@ export default {
           this.$refs.tree.setCheckedKeys(this.role.routerIds);
         } else {
           this.$refs.tree.setCheckedKeys([]);
+        }
+
+        if (this.role.permissionIds) {
+          this.$refs.permTree.setCheckedKeys(this.role.permissionIds);
+        } else {
+          this.$refs.permTree.setCheckedKeys([]);
         }
         // set checked state of a node not affects its father and child nodes
         this.checkStrictly = false;
@@ -256,6 +306,7 @@ export default {
       const checkedKeys = this.$refs.tree
         .getCheckedKeys()
         .concat(this.$refs.tree.getHalfCheckedKeys());
+      const checkedPermKeys = this.$refs.permTree.getCheckedKeys();
       // this.role.routes = this.generateTree(
       // deepClone(this.serviceRoutes),
       // "/",
@@ -267,6 +318,7 @@ export default {
         this.form.role.description = this.role.description;
         this.form.role.id = this.role.id;
         this.form.routerIds = checkedKeys;
+        this.form.permissionIds = checkedPermKeys;
         await updateRole(this.role.id, this.form);
         // for (let index = 0; index < this.rolesList.length; index++) {
         //   if (this.rolesList[index].id === this.role.id) {
@@ -279,6 +331,7 @@ export default {
         this.form.routerIds = this.$refs.tree
           .getCheckedKeys()
           .concat(this.$refs.tree.getHalfCheckedKeys());
+        this.form.permissionIds = this.$refs.permTree.getCheckedKeys();
         this.form.role.id = this.role.id;
         this.form.role.name = this.role.name;
         this.form.role.description = this.role.description;

@@ -235,7 +235,6 @@ export default {
       const res = await getRoles();
       this.roles = res.data;
       this.otherRoles = res.data;
-      this.listLoading = false;
     },
     fetchData() {},
     handleCreate() {

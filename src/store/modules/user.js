@@ -32,7 +32,8 @@ const state = {
   avatar: '',
   rootRoleId: '',
   routes: [],
-  addRoutes: []
+  addRoutes: [],
+  permissions: [],
 }
 
 const mutations = {
@@ -51,6 +52,9 @@ const mutations = {
   },
   SET_ROOT_ROLE_ID: (state, rootId) => {
     state.rootRoleId = rootId
+  },
+  SET_PERMISSIONS: (state, permissions) => {
+    state.permissions = permissions
   }
 }
 
@@ -115,12 +119,14 @@ const actions = {
         const {
           username,
           avatar,
-          rootRoleId
+          rootRoleId,
+          permissions
         } = data
 
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
         commit('SET_ROOT_ROLE_ID', rootRoleId)
+        commit('SET_PERMISSIONS', permissions)
         // resetRouter()
         getRoutes(rootRoleId).then(response => {
           resetRouter()
@@ -128,28 +134,16 @@ const actions = {
           response.data.forEach(item => {
             replaceComponent(item, accessRouters)
           })
-          accessRouters.forEach(r => {
-            router.options.routes.push(r)
-          })
-          router.options.routes.push({
-            path: '*',
-            redirect: '/404',
-            hidden: true
-          })
-          commit('SET_ROUTES', router.options.routes)
-          // localStorage.setItem('servericeRoutes', router.options.routes)
-          console.log(router.options.routes)
-          // router.addRoutes(router.options.routes)
           accessRouters.concat({
             path: '*',
             redirect: '/404',
             hidden: true
           })
+          accessRouters.forEach(r => {
+            router.options.routes.push(r)
+          })
+          commit('SET_ROUTES', router.options.routes)
           router.addRoutes(accessRouters)
-          console.log(router)
-          // dispatch('tagsView/delAllViews', null, {
-          //   root: true
-          // })
           resolve()
         })
         // const accessRoutes =[]
