@@ -15,3 +15,10 @@ export function getStudentList(data) {
     data
   })
 }
+
+export function getStudentSchoolInfos() {
+  return request({
+    url: '/api/student/studentSchoolInfos',
+    method: 'get'
+  })
+}
