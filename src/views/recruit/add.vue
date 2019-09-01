@@ -1,15 +1,15 @@
 <template>
   <div class="app-container">
-    <el-card type="box-card">
-      <div slot="header" class="clearfix">
-        <span>基本信息</span>
-        <el-button
-          class="spanBtn"
-          type="primary"
-          @click="expandChange"
-        >{{ moreVisible?'收起更多':'展开更多' }}</el-button>
-      </div>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-card type="box-card">
+        <div slot="header" class="clearfix">
+          <span class="head-span">基本信息</span>
+          <el-button
+            class="spanBtn"
+            type="primary"
+            @click="expandChange"
+          >{{ moreVisible?'收起更多':'展开更多' }}</el-button>
+        </div>
         <el-form-item label="学员姓名" prop="name">
           <el-input v-model="form.name" class="formItem" placeholder="请输入姓名" />
         </el-form-item>
@@ -22,7 +22,7 @@
             maxlength="11"
             placeholder="请输入联系电话"
           />
-          <el-select v-model="form.genearch" class="smallFormItem">
+          <el-select v-model="form.genearch" class="small-form-item">
             <el-option
               v-for="item in genearchs"
               :key="item.value"
@@ -40,7 +40,7 @@
             maxlength="11"
             placeholder="请输入次要电话"
           />
-          <el-select v-model="form.genearchSec" class="smallFormItem">
+          <el-select v-model="form.genearchSec" class="small-form-item">
             <el-option
               v-for="item in genearchs"
               :key="item.value"
@@ -59,7 +59,7 @@
             maxlength="11"
             placeholder="请输入其他电话"
           />
-          <el-select v-model="form.genearchOther" class="smallFormItem">
+          <el-select v-model="form.genearchOther" class="small-form-item">
             <el-option
               v-for="item in genearchs"
               :key="item.value"
@@ -173,22 +173,175 @@
             <el-input v-model="form.mark" type="textarea" />
           </el-form-item>
         </div>
-      </el-form>
-    </el-card>
+      </el-card>
 
-    <el-card class="bottom-card">
-      <div class="bottom-div">
-        <el-button type="primary" @click="onSubmit">新增</el-button>
-        <el-button @click="onCancel">取消</el-button>
-      </div>
-    </el-card>
+      <el-card class="other-card">
+        <div slot="header" class="clearfix">
+          <span class="head-span">跟进信息</span>
+        </div>
+
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="咨询方式" prop="conMethod">
+              <el-radio-group v-model="form.consulteMethod">
+                <el-radio v-for="method in conMethod" :label="method.label" :key="method.value" />
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="意向度">
+              <el-select v-model="form.intention" class="small-form-item">
+                <el-option
+                  v-for="intent in intention"
+                  :label="intent.label"
+                  :key="intent.value"
+                  :value="intent.label"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="咨询课程">
+              <el-select multiple v-model="form.courses">
+                <el-option v-for="course in courses" :label="course.name" :key="course.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">
+            <el-form-item label="跟进状态">
+              <el-select v-model="form.followStatus">
+                <el-option
+                  v-for="status in followStatus"
+                  :label="status.label"
+                  :value="status.label"
+                  :key="status.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="关键词">
+              <el-input v-model="form.keywork" placeholder></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="回访提醒">
+              <el-date-picker
+                v-model="form.revisitRemind"
+                class="formItem"
+                type="datetime"
+                value-format="timestamp"
+                placeholder="请选择日期"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item label="沟通内容">
+          <el-input v-model="form.communicateContent" type="textarea"></el-input>
+        </el-form-item>
+      </el-card>
+
+      <el-card class="other-card">
+        <div slot="header" class="clearfix">
+          <span class="head-span">经办信息</span>
+        </div>
+        <el-row>
+          <el-col :span="4">
+            <el-form-item label="咨询校区">
+              <el-select v-model="form.campus">
+                <el-option
+                  v-for="campus in campuses"
+                  :key="campus.id"
+                  :label="campus.name"
+                  :value="campus.name"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="录入时间">
+              <el-date-picker
+                v-model="form.entryTime"
+                class="formItem"
+                type="datetime"
+                value-format="timestamp"
+                placeholder="请选择日期时间"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="渠道">
+              <el-select v-model="form.channel">
+                <el-option
+                  v-for="channel in channels"
+                  :key="channel.id"
+                  :label="channel.name"
+                  :value="channel.name"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="采单员">
+              <el-select v-model="form.clerk">
+                <el-option
+                  v-for="staff in staffs"
+                  :key="staff.id"
+                  :label="staff.name"
+                  :value="staff.name"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="电话销售">
+              <el-select v-model="form.telemarketer">
+                <el-option
+                  v-for="staff in staffs"
+                  :key="staff.id"
+                  :label="staff.name"
+                  :value="staff.name"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="销售员">
+              <el-select v-model="form.salesman">
+                <el-option
+                  v-for="staff in staffs"
+                  :key="staff.id"
+                  :label="staff.name"
+                  :value="staff.name"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card class="other-card">
+        <div class="bottom-div">
+          <el-button type="primary" @click="onSubmit">保存</el-button>
+          <!-- <el-button @click="onCancel">取消</el-button> -->
+        </div>
+      </el-card>
+    </el-form>
   </div>
 </template>
 
 <script>
 import { addStudent, getStudentSchoolInfos } from "@/api/student";
 import { parseTime } from "@/utils";
-import { genearches, grades } from "@/constants";
+import {
+  genearches,
+  grades,
+  intention,
+  conMethod,
+  followStatus
+} from "@/constants";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 
 export default {
@@ -216,7 +369,7 @@ export default {
         phone: "", // 主要电话
         phoneSec: "", // 次要电话
         phoneOther: "", // 其他电话
-        sex: "", // 性别
+        sex: "-1", // 性别
         idCard: "", // 身份证号
         wechat: "", // 微信号
         birthday: "", // 生日
@@ -226,12 +379,32 @@ export default {
         homeAddress: "", // 居住地址
         referPhone: "", // 推荐人手机号码
         createTime: "", //录入时间
-        mark: "" // 其他信息
+        mark: "", // 其他信息
+        consulteMethod: "来电", //咨询方式
+        intention: "?", //意向度
+        courses: [], //咨询课程
+        followStatus: "待跟进", //跟进状态
+        keyWord: "", //关键词
+        revisitRemind: "", //回访提醒
+        communicateContent: "", //沟通内容
+        campus: "", //校区
+        entryTime: "", //录入时间
+        channel: "", //渠道
+        clerk: "", //采单员
+        salesman: "", //销售员
+        telemarketer: "" //电话销售
       },
+      campuses: [], //校区
+      channels: [], //渠道
+      staffs: [], //员工
       state: "",
       genearchs: genearches,
       grades: grades,
+      conMethod: conMethod,
+      intention: intention,
+      followStatus: followStatus,
       value: "",
+      courses: [],
       nowAddrDetail: ""
     };
   },
@@ -322,10 +495,14 @@ export default {
       // });
     },
     queryClassSearchAsync(queryString, cb) {
+      for (let i of this.classNames) {
+        i.value = i.name;
+      }
       var classNames = this.classNames;
       var result = queryString
         ? classNames.filter(this.createStateFilter(queryString))
         : classNames;
+      cb(result);
       // clearTimeout(this.timeout)
     },
     handleSelectSchool(item) {
@@ -345,7 +522,7 @@ export default {
 .formItem {
   width: 220px;
 }
-.smallFormItem {
+.small-form-item {
   width: 100px;
 }
 .spanBtn {
@@ -363,7 +540,10 @@ export default {
 .address-select {
   width: 380px;
 }
-.bottom-card {
+.head-span {
+  font-weight: bolder;
+}
+.other-card {
   margin: 20px 0;
 }
 .bottom-div {
