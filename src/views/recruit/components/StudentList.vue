@@ -36,10 +36,10 @@
         @click="handleFilter"
       >搜索</el-button>
       <el-button
+        v-permission="['admin','studentNew']"
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
-        v-permission="['admin','studentNew']"
         icon="el-icon-edit"
         @click="handleCreate"
       >添加</el-button>
@@ -82,13 +82,22 @@
           <span>{{ scope.row.sex==0?"女":"男" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="登记时间" align="center" width="160" sortable prop="updateDate">
+      <el-table-column label="登记时间" align="center" width="160" sortable prop="entryTime">
         <template
           slot-scope="scope"
-        >{{ scope.row.updateDate | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+        >{{ scope.row.entryTime.valueOf() | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
+      </el-table-column>
+      <el-table-column label="学校" align="center" width="320" sortable prop="school">
+        <template slot-scope="scope">{{ scope.row.school}}</template>
       </el-table-column>
       <el-table-column label="年级" align="center" width="320" sortable prop="grade">
         <template slot-scope="scope">{{ scope.row.grade }}</template>
+      </el-table-column>
+      <el-table-column label="班级" align="center" width="320" sortable prop="className">
+        <template slot-scope="scope">{{ scope.row.className}}</template>
+      </el-table-column>
+      <el-table-column label="家庭住址" align="center" width="320" sortable prop="homeAddress">
+        <template slot-scope="scope">{{ scope.row.homeAddress}}</template>
       </el-table-column>
       <el-table-column label="备注" align="center">
         <template slot-scope="scope">{{ scope.row.mark }}</template>
@@ -178,7 +187,7 @@ export default {
       });
     },
     handleCreate() {
-      this.$router.push("/student/addStudent");
+      this.$router.push("/recruit/addStudent");
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1;

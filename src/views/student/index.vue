@@ -38,8 +38,8 @@
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
-        type="primary"
         v-permission="['admin','studentNew']"
+        type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
       >添加</el-button>
@@ -123,10 +123,10 @@
 </template>
 
 <script>
-import { getStudentList } from "@/api/student";
-import waves from "@/directive/waves";
-import { parseTime } from "@/utils";
-import Pagination from "@/components/Pagination";
+import { getStudentList } from '@/api/student';
+import waves from '@/directive/waves';
+import { parseTime } from '@/utils';
+import Pagination from '@/components/Pagination';
 
 export default {
   components: { Pagination },
@@ -134,11 +134,11 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger"
-      };
-      return statusMap[status];
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
     }
   },
   data() {
@@ -149,99 +149,99 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 5,
-        name: "",
-        sex: "",
-        phone: "",
-        grade: "",
+        name: '',
+        sex: '',
+        phone: '',
+        grade: '',
         // sort: '+id',
-        orderKey: "id",
-        orderType: "desc"
+        orderKey: 'id',
+        orderType: 'desc'
       },
-      value: "",
+      value: '',
       sortOptions: [
-        { label: "默认", key: "-id" },
-        { label: "倒序", key: "+id" }
+        { label: '默认', key: '-id' },
+        { label: '倒序', key: '+id' }
       ],
       downloadLoading: false
-    };
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     fetchData() {
-      this.listLoading = true;
+      this.listLoading = true
       getStudentList(this.listQuery).then(response => {
-        this.list = response.data.list;
-        this.totalNum = response.total;
-        this.listLoading = false;
-      });
+        this.list = response.data.list
+        this.totalNum = response.total
+        this.listLoading = false
+      })
     },
     handleCreate() {
-      this.$router.push("/student/addStudent");
+      this.$router.push('/student/addStudent')
     },
     handleFilter(val) {
-      this.listQuery.pageNum = 1;
-      console.log("sortVal:" + val);
+      this.listQuery.pageNum = 1
+      console.log('sortVal:' + val)
       //  if(val instanceof String){
       try {
-        if (val.startsWith("+")) {
-          this.listQuery.orderType = "asc";
-        } else if (val.startsWith("-")) {
-          this.listQuery.orderType = "desc";
+        if (val.startsWith('+')) {
+          this.listQuery.orderType = 'asc';
+        } else if (val.startsWith('-')) {
+          this.listQuery.orderType = 'desc';
         }
-        this.listQuery.orderKey = val.substring(1);
+        this.listQuery.orderKey = val.substring(1)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-      this.fetchData();
+      this.fetchData()
     },
 
     sortChange(data) {
-      const { prop, order } = data;
-      console.error("prop:" + prop + " order:" + order);
-      this.handleFilter();
+      const { prop, order } = data
+      console.error('prop:' + prop + ' order:' + order)
+      this.handleFilter()
     },
 
     handleDownload() {
-      this.downloadLoading = true;
-      import("@/vendor/Export2Excel").then(excel => {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
         const tHeader = [
-          "姓名",
-          "登记日期",
-          "性别",
-          "手机号码",
-          "年级",
-          "备注"
-        ];
+          '姓名',
+          '登记日期',
+          '性别',
+          '手机号码',
+          '年级',
+          '备注'
+        ]
         const filterVal = [
-          "name",
-          "updateDate",
-          "sex",
-          "phone",
-          "grade",
-          "mark"
-        ];
-        const data = this.formatJson(filterVal, this.list);
+          'name',
+          'updateDate',
+          'sex',
+          'phone',
+          'grade',
+          'mark'
+        ]
+        const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "学员列表"
-        });
-        this.downloadLoading = false;
-      });
+          filename: '学员列表'
+        })
+        this.downloadLoading = false
+      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          if (j === "startDate" || j === "endDate") {
-            return parseTime(v[j], "{y}-{m}-{d}");
+          if (j === 'startDate' || j === 'endDate') {
+            return parseTime(v[j], '{y}-{m}-{d}')
           } else {
-            return v[j];
+            return v[j]
           }
         })
-      );
+      )
     }
   }
-};
+}
 </script>

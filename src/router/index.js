@@ -31,234 +31,244 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [{
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: '/redirect/:path*',
-      component: () => import('@/views/redirect/index')
-    }]
-  },
+  path: '/redirect',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: '/redirect/:path*',
+    component: () => import('@/views/redirect/index')
+  }]
+},
 
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
+{
+  path: '/login',
+  component: () => import('@/views/login/index'),
+  hidden: true
+},
 
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
+{
+  path: '/404',
+  component: () => import('@/views/404'),
+  hidden: true
+},
 
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: () => import('@/views/dashboard/index'),
-        meta: {
-          title: '工作台',
-          icon: 'dashboard'
-        }
-      }
-
-    ]
-  },
-
-  {
-    path: '/recruit',
-    component: Layout,
-    redirect: '/consultation',
-    name: 'recruit',
+{
+  path: '/',
+  component: Layout,
+  redirect: '/dashboard',
+  children: [{
+    path: 'dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/dashboard/index'),
     meta: {
-      title: '招生中心',
-      icon: 'example'
-    },
-    children: [{
-      path: 'consultation',
-      name: 'consultation',
-      component: () => import('@/views/recruit/consultation'),
-      meta: {
-        title: '咨询本'
-      }
-    }]
+      title: '工作台',
+      icon: 'dashboard'
+    }
+  }
+
+  ]
+},
+
+{
+  path: '/recruit',
+  component: Layout,
+  redirect: '/consultation',
+  name: 'recruit',
+  meta: {
+    title: '招生中心',
+    icon: 'example'
   },
+  children: [{
+    path: 'consultation',
+    name: 'consultation',
+    component: () => import('@/views/recruit/consultation'),
+    meta: {
+      title: '咨询本'
+    }
+  },
+  {
+    path: 'addStudent',
+    name: 'addStudent',
+    hidden: true,
+    component: () => import('@/views/recruit/add'),
+    meta: {
+      title: '新增咨询'
+    }
+  }
+  ]
+}
 ]
 
 export const asyncRoutes = [{
-    path: '/recruit',
-    component: Layout,
-    name: 'recruit',
+  path: '/recruit',
+  component: Layout,
+  name: 'recruit',
+  meta: {
+    title: '招生中心',
+    icon: 'example'
+  },
+  children: [{
+    path: 'consultation',
+    name: 'consultation',
+    component: () => import('@/views/recruit/consultation'),
     meta: {
-      title: '招生中心',
-      icon: 'example'
-    },
-    children: [{
-      path: 'consultation',
-      name: 'consultation',
-      component: () => import('@/views/recruit/consultation'),
-      meta: {
-        title: '咨询本'
-      }
-    }]
+      title: '咨询本'
+    }
+  }]
+},
+{
+  path: '/student',
+  component: Layout,
+  redirect: '/student/list',
+  name: 'Student',
+  meta: {
+    title: '学员',
+    icon: 'example'
+  },
+  children: [{
+    path: 'list',
+    name: 'StudentList',
+    component: () => import('@/views/student/index'),
+    meta: {
+      title: '学员列表',
+      icon: 'table'
+    }
   },
   {
-    path: '/student',
-    component: Layout,
-    redirect: '/student/list',
-    name: 'Student',
+    path: 'add',
+    name: 'AddStudent',
+    component: () => import('@/views/student/add'),
     meta: {
-      title: '学员',
-      icon: 'example'
-    },
-    children: [{
-        path: 'list',
-        name: 'StudentList',
-        component: () => import('@/views/student/index'),
-        meta: {
-          title: '学员列表',
-          icon: 'table'
-        }
-      },
-      {
-        path: 'add',
-        name: 'AddStudent',
-        component: () => import('@/views/student/add'),
-        meta: {
-          title: '新增学员',
-          icon: 'form'
-        }
-      }
-    ]
-  },
-
-  {
-    path: '/staff',
-    component: Layout,
-    redirect: '/staff/list',
-    name: 'Staff',
-    meta: {
-      title: '员工',
-      icon: 'example'
-    },
-    children: [{
-        path: 'list',
-        name: 'StaffList',
-        component: () => import('@/views/staff/index'),
-        meta: {
-          title: '员工列表',
-          icon: 'table'
-        }
-      },
-      {
-        path: 'add',
-        name: 'AddStaff',
-        component: () => import('@/views/staff/add'),
-        meta: {
-          title: '新增员工',
-          icon: 'form'
-        }
-      }
-    ]
-  },
-
-  {
-    path: '/teacher',
-    component: Layout,
-    redirect: '/teacher/list',
-    name: 'Teacher',
-    meta: {
-      title: '教师',
+      title: '新增学员',
       icon: 'form'
-    },
-    children: [{
-        path: 'list',
-        name: 'TeacherList',
-        component: () => import('@/views/teacher/index'),
-        meta: {
-          title: '教师列表',
-          icon: 'table'
-        }
-      },
-      {
-        path: 'add',
-        name: 'AddTeacher',
-        component: () => import('@/views/teacher/add'),
-        meta: {
-          title: '创建教师',
-          icon: 'form'
-        }
-      }
-    ]
-  },
-
-  {
-    path: '/course',
-    component: Layout,
-    rediredt: '/course/list',
-    name: 'Course',
-    meta: {
-      title: '班级',
-      icon: 'table'
-    },
-    children: [{
-        path: 'list',
-        name: 'CourseList',
-        component: () => import('@/views/course/index'),
-        meta: {
-          title: '班级列表',
-          icon: 'list'
-        }
-      },
-      {
-        path: 'add',
-        name: 'AddCourse',
-        component: () => import('@/views/course/add'),
-        meta: {
-          title: '创建班级',
-          icon: 'edit'
-        }
-      }
-    ]
-  },
-  {
-    path: '/account',
-    component: Layout,
-    rediredt: '/account/role',
-    name: 'Account',
-    meta: {
-      title: '账号',
-      icon: 'table'
-    },
-    children: [{
-        path: 'list',
-        name: 'AccountList',
-        component: () => import('@/views/account/role'),
-        meta: {
-          title: '角色管理',
-          icon: 'form'
-        }
-      },
-      {
-        path: 'userList',
-        name: 'UserList',
-        component: () => import('@/views/account/user'),
-        meta: {
-          title: '用户管理',
-          icon: 'form'
-        }
-      }
-    ]
-  },
-  {
-    path: '*',
-    redirect: '/404',
-    hidden: true
+    }
   }
+  ]
+},
+
+{
+  path: '/staff',
+  component: Layout,
+  redirect: '/staff/list',
+  name: 'Staff',
+  meta: {
+    title: '员工',
+    icon: 'example'
+  },
+  children: [{
+    path: 'list',
+    name: 'StaffList',
+    component: () => import('@/views/staff/index'),
+    meta: {
+      title: '员工列表',
+      icon: 'table'
+    }
+  },
+  {
+    path: 'add',
+    name: 'AddStaff',
+    component: () => import('@/views/staff/add'),
+    meta: {
+      title: '新增员工',
+      icon: 'form'
+    }
+  }
+  ]
+},
+
+{
+  path: '/teacher',
+  component: Layout,
+  redirect: '/teacher/list',
+  name: 'Teacher',
+  meta: {
+    title: '教师',
+    icon: 'form'
+  },
+  children: [{
+    path: 'list',
+    name: 'TeacherList',
+    component: () => import('@/views/teacher/index'),
+    meta: {
+      title: '教师列表',
+      icon: 'table'
+    }
+  },
+  {
+    path: 'add',
+    name: 'AddTeacher',
+    component: () => import('@/views/teacher/add'),
+    meta: {
+      title: '创建教师',
+      icon: 'form'
+    }
+  }
+  ]
+},
+
+{
+  path: '/course',
+  component: Layout,
+  rediredt: '/course/list',
+  name: 'Course',
+  meta: {
+    title: '班级',
+    icon: 'table'
+  },
+  children: [{
+    path: 'list',
+    name: 'CourseList',
+    component: () => import('@/views/course/index'),
+    meta: {
+      title: '班级列表',
+      icon: 'list'
+    }
+  },
+  {
+    path: 'add',
+    name: 'AddCourse',
+    component: () => import('@/views/course/add'),
+    meta: {
+      title: '创建班级',
+      icon: 'edit'
+    }
+  }
+  ]
+},
+{
+  path: '/account',
+  component: Layout,
+  rediredt: '/account/role',
+  name: 'Account',
+  meta: {
+    title: '账号',
+    icon: 'table'
+  },
+  children: [{
+    path: 'list',
+    name: 'AccountList',
+    component: () => import('@/views/account/role'),
+    meta: {
+      title: '角色管理',
+      icon: 'form'
+    }
+  },
+  {
+    path: 'userList',
+    name: 'UserList',
+    component: () => import('@/views/account/user'),
+    meta: {
+      title: '用户管理',
+      icon: 'form'
+    }
+  }
+  ]
+},
+{
+  path: '*',
+  redirect: '/404',
+  hidden: true
+}
 ]
 
 export const componentMap = {
@@ -266,7 +276,8 @@ export const componentMap = {
   staffList: () => import('@/views/staff/index'),
   staffAdd: () => import('@/views/staff/add'),
   studentList: () => import('@/views/student/index'),
-  studentAdd: () => import('@/views/student/add'),
+  // studentAdd: () => import('@/views/student/add'),
+  studentAdd: () => import('@/views/recruit/add'),
   teacherList: () => import('@/views/teacher/index'),
   teacherAdd: () => import('@/views/teacher/add'),
   courseList: () => import('@/views/course/index'),
@@ -285,7 +296,7 @@ export const metaMap = {
     icon: 'table'
   },
   studentAdd: {
-    title: '新增学员',
+    title: '新增咨询',
     icon: 'form'
   },
   staff: {

@@ -11,25 +11,21 @@
       <el-tab-pane label="试听管理" name="auditionManager">试听管理</el-tab-pane>
       <el-tab-pane label="渠道管理" name="channelManager">渠道管理</el-tab-pane>
     </el-tabs>
-    <div ref="new">
-        
-    </div>
+    <div ref="new" />
   </div>
 </template>
 
 <script>
-import addStudent from "./components/AddStudent";
-import studentList from "./components/StudentList";
+import studentList from './components/StudentList';
 export default {
-  components: { addStudent, studentList },
+  components: { studentList },
   data() {
     return {
-      activeName: "myConsult"
-    };
+      activeName: 'myConsult'
+    }
   }
-};
+}
 </script>
-
 
 <style>
 </style>
