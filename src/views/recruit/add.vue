@@ -22,14 +22,20 @@
             maxlength="11"
             placeholder="请输入联系电话"
           />
-          <el-select v-model="form.genearch" class="small-form-item">
+          <el-autocomplete
+            v-model="form.genearch"
+            class="small-form-item"
+            placeholder="请输入"
+            :fetch-suggestions="queryGeanearchSearchAsync"
+          />
+          <!-- <el-select v-model="form.genearch" class="small-form-item">
             <el-option
-              v-for="item in genearchs"
+              v-for="item in genearches"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
-          </el-select>
+          </el-select>-->
           <i class="icon-wrap el-icon-circle-plus" @click="addGenearch" />
         </el-form-item>
         <el-form-item v-if="genSecVisible" label="次要电话">
@@ -40,14 +46,21 @@
             maxlength="11"
             placeholder="请输入次要电话"
           />
-          <el-select v-model="form.genearchSec" class="small-form-item">
+          <!-- <el-select v-model="form.genearchSec" class="small-form-item">
             <el-option
               v-for="item in genearchs"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
-          </el-select>
+          </el-select>-->
+
+          <el-autocomplete
+            v-model="form.genearchSec"
+            class="small-form-item"
+            placeholder="请输入"
+            :fetch-suggestions="queryGeanearchSearchAsync"
+          />
           <i class="icon-wrap el-icon-remove" @click="removeSecGen" />
         </el-form-item>
 
@@ -59,14 +72,20 @@
             maxlength="11"
             placeholder="请输入其他电话"
           />
-          <el-select v-model="form.genearchOther" class="small-form-item">
+          <!-- <el-select v-model="form.genearchOther" class="small-form-item">
             <el-option
               v-for="item in genearchs"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
-          </el-select>
+          </el-select>-->
+          <el-autocomplete
+            v-model="form.genearchOther"
+            class="small-form-item"
+            placeholder="请输入"
+            :fetch-suggestions="queryGeanearchSearchAsync"
+          />
           <i class="icon-wrap el-icon-remove" @click="removeSecOther" />
         </el-form-item>
 
@@ -115,7 +134,7 @@
                 <el-autocomplete
                   v-model="form.school"
                   class="formItem"
-                  placeholder="请输入学校"
+                  placeholder="请选择或输入学校"
                   :fetch-suggestions="querySchoolSearchAsync"
                   @select="handleSelectSchool"
                 ></el-autocomplete>
@@ -123,14 +142,20 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="选择年级">
-                <el-select v-model="form.grade" class="formItem" filterable placeholder="请选择">
+                <!-- <el-select v-model="form.grade" class="formItem" filterable placeholder="请选择">
                   <el-option
                     v-for="item in grades"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
                   />
-                </el-select>
+                </el-select>-->
+                <el-autocomplete
+                  v-model="form.grade"
+                  class="formItem"
+                  placeholder="请选择或输入年级"
+                  :fetch-suggestions="queryGradeSearchAsync"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -138,7 +163,7 @@
                 <el-autocomplete
                   v-model="form.className"
                   class="formItem"
-                  placeholder="请输入学校班级名称"
+                  placeholder="请选择或输入学校班级名称"
                   :fetch-suggestions="queryClassSearchAsync"
                   @select="handleSelectClass"
                 />
@@ -183,21 +208,33 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="咨询方式" prop="conMethod">
-              <el-radio-group v-model="form.consulteMethod">
-                <el-radio v-for="method in conMethod" :label="method.label" :key="method.value" />
-              </el-radio-group>
+              <!-- <el-radio-group v-model="form.consulteMethod">
+                <el-radio v-for="method in conMethods" :label="method.label" :key="method.value" />
+              </el-radio-group>-->
+              <el-autocomplete
+                v-model="form.consulteMethod"
+                class="formItem"
+                placeholder="请选择或输入咨询方式"
+                :fetch-suggestions="queryConMethodSearchAsync"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label="意向度">
-              <el-select v-model="form.intention" class="small-form-item">
+              <!-- <el-select v-model="form.intention" class="small-form-item">
                 <el-option
-                  v-for="intent in intention"
+                  v-for="intent in intentions"
                   :label="intent.label"
                   :key="intent.value"
                   :value="intent.label"
                 ></el-option>
-              </el-select>
+              </el-select>-->
+              <el-autocomplete
+                v-model="form.intention"
+                class="formItem"
+                placeholder="请选择或输入意向度"
+                :fetch-suggestions="queryIntentionSearchAsync"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -211,19 +248,31 @@
         <el-row>
           <el-col :span="4">
             <el-form-item label="跟进状态">
-              <el-select v-model="form.followStatus">
+              <!-- <el-select v-model="form.followStatus">
                 <el-option
                   v-for="status in followStatus"
                   :label="status.label"
                   :value="status.label"
                   :key="status.value"
                 />
-              </el-select>
+              </el-select>-->
+              <el-autocomplete
+                v-model="form.followStatuses"
+                class="formItem"
+                placeholder="请选择或输入跟进状态"
+                :fetch-suggestions="queryFollowStatusSearchAsync"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label="关键词">
-              <el-input v-model="form.keywork" placeholder></el-input>
+              <!-- <el-input v-model="form.keywork" placeholder></el-input> -->
+              <el-autocomplete
+                v-model="form.keyword"
+                class="formItem"
+                placeholder="请选择或输入关键词"
+                :fetch-suggestions="queryKeywordSearchAsync"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -274,14 +323,20 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="渠道">
-              <el-select v-model="form.channel">
+              <!-- <el-select v-model="form.channel">
                 <el-option
                   v-for="channel in channels"
                   :key="channel.id"
                   :label="channel.name"
                   :value="channel.name"
                 />
-              </el-select>
+              </el-select>-->
+              <el-autocomplete
+                v-model="form.channel"
+                class="formItem"
+                placeholder="请选择或输入渠道"
+                :fetch-suggestions="queryChannelSearchAsync"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -384,7 +439,7 @@ export default {
         intention: "?", //意向度
         courses: [], //咨询课程
         followStatus: "待跟进", //跟进状态
-        keyWord: "", //关键词
+        keyword: "", //关键词
         revisitRemind: "", //回访提醒
         communicateContent: "", //沟通内容
         campus: "", //校区
@@ -397,12 +452,14 @@ export default {
       campuses: [], //校区
       channels: [], //渠道
       staffs: [], //员工
+      genearches: [], //家长
+      grades: [], //年级
+      conMethods: [], //咨询方式
+      intentions: [], //意向度
+      keywords: [], //关键词
+
       state: "",
-      genearchs: genearches,
-      grades: grades,
-      conMethod: conMethod,
-      intention: intention,
-      followStatus: followStatus,
+      followStatuses: [], //跟进状态
       value: "",
       courses: [],
       nowAddrDetail: ""
@@ -479,7 +536,19 @@ export default {
         );
       };
     },
+    queryGeanearchSearchAsync(queryString, cb) {
+      //家长
+      for (let i of this.genearchs) {
+        i.value = i.name;
+      }
+      var genearches = this.genearches;
+      var results = queryString
+        ? genearches.filter(this.createStateFilter(queryString))
+        : genearches;
+      cb(results);
+    },
     querySchoolSearchAsync(queryString, cb) {
+      //学校
       for (let i of this.schools) {
         i.value = i.name;
       }
@@ -487,14 +556,21 @@ export default {
       var results = queryString
         ? schools.filter(this.createStateFilter(queryString))
         : schools;
-      console.log("result");
-      console.log(results);
-      // clearTimeout(this.timeout);
-      // this.timeout = setTimeout(() => {
       cb(results);
-      // });
+    },
+    queryGradeSearchAsync(queryString, cb) {
+      //年级
+      for (let i of this.grades) {
+        i.value = i.name;
+      }
+      var grades = this.grades;
+      var results = queryString
+        ? grades.filter(this.createStateFilter(queryString))
+        : grades;
+      cb(results);
     },
     queryClassSearchAsync(queryString, cb) {
+      //班级
       for (let i of this.classNames) {
         i.value = i.name;
       }
@@ -503,8 +579,63 @@ export default {
         ? classNames.filter(this.createStateFilter(queryString))
         : classNames;
       cb(result);
-      // clearTimeout(this.timeout)
     },
+    queryConMethodSearchAsync(queryString, cb) {
+      //咨询方式
+      for (let i of this.conMethods) {
+        i.value = i.name;
+      }
+      var conMethods = this.conMethods;
+      var results = queryString
+        ? conMethods.filter(this.createStateFilter(queryString))
+        : conMethods;
+      cb(results);
+    },
+    queryIntentionSearchAsync(queryString, cb) {
+      //意向度
+      for (let i of this.intentions) {
+        i.value = i.name;
+      }
+      var intentions = this.intentions;
+      var results = queryString
+        ? intentions.filter(this.createStateFilter(queryString))
+        : intentions;
+      cb(results);
+    },
+    queryFollowStatusSearchAsync(queryString, cb) {
+      //跟进状态
+      for (let i of this.followStatuses) {
+        i.value = i.name;
+      }
+      var followStatuses = this.followStatuses;
+      var results = queryString
+        ? followStatuses.filter(this.createStateFilter(queryString))
+        : followStatuses;
+      cb(results);
+    },
+    queryKeywordSearchAsync(queryString, cb) {
+      //关键词
+      for (let i of this.keywords) {
+        i.value = i.name;
+      }
+      var keywords = this.keywords;
+      var results = queryString
+        ? keywords.filter(this.createStateFilter(queryString))
+        : keywords;
+      cb(results);
+    },
+    queryChannelSearchAsync(queryString, cb) {
+      //渠道
+      for (let i of this.channels) {
+        i.value = i.name;
+      }
+      var channels = this.channels;
+      var results = queryString
+        ? channels.filter(this.createStateFilter(queryString))
+        : channels;
+      cb(results);
+    },
+
     handleSelectSchool(item) {
       console.log(item);
     },
