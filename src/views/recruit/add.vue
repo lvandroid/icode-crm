@@ -206,7 +206,7 @@
         </div>
 
         <el-row>
-          <el-col :span="8">
+          <el-col :span="4">
             <el-form-item label="咨询方式" prop="conMethod">
               <!-- <el-radio-group v-model="form.consulteMethod">
                 <el-radio v-for="method in conMethods" :label="method.label" :key="method.value" />
@@ -237,10 +237,15 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="12">
             <el-form-item label="咨询课程">
-              <el-select multiple v-model="form.courses">
-                <el-option v-for="course in courses" :label="course.name" :key="course.id" />
+              <el-select multiple v-model="form.courses" class="address-select">
+                <el-option
+                  v-for="course in courses"
+                  :label="course.name"
+                  :key="course.id"
+                  :value="course.name"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -257,7 +262,7 @@
                 />
               </el-select>-->
               <el-autocomplete
-                v-model="form.followStatuses"
+                v-model="form.followStatus"
                 class="formItem"
                 placeholder="请选择或输入跟进状态"
                 :fetch-suggestions="queryFollowStatusSearchAsync"
@@ -300,14 +305,20 @@
         <el-row>
           <el-col :span="4">
             <el-form-item label="咨询校区">
-              <el-select v-model="form.campus">
+              <!-- <el-select v-model="form.campus">
                 <el-option
                   v-for="campus in campuses"
                   :key="campus.id"
                   :label="campus.name"
                   :value="campus.name"
                 />
-              </el-select>
+              </el-select>-->
+              <el-autocomplete
+                v-model="form.campus"
+                class="formItem"
+                placeholder="请选择或输入校区"
+                :fetch-suggestions="queryCampusSearchAsync"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -390,13 +401,13 @@
 <script>
 import { addStudent, getStudentSchoolInfos } from "@/api/student";
 import { parseTime } from "@/utils";
-import {
-  genearches,
-  grades,
-  intention,
-  conMethod,
-  followStatus
-} from "@/constants";
+// import {
+// genearches,
+// grades,
+// intention,
+// conMethod,
+// followStatus
+// } from "@/constants";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 
 export default {
@@ -435,10 +446,10 @@ export default {
         referPhone: "", // 推荐人手机号码
         createTime: "", //录入时间
         mark: "", // 其他信息
-        consulteMethod: "来电", //咨询方式
-        intention: "?", //意向度
+        consulteMethod: "", //咨询方式
+        intention: "", //意向度
         courses: [], //咨询课程
-        followStatus: "待跟进", //跟进状态
+        followStatus: "", //跟进状态
         keyword: "", //关键词
         revisitRemind: "", //回访提醒
         communicateContent: "", //沟通内容
@@ -499,10 +510,31 @@ export default {
 
     async getStudentSchoolInfos() {
       const res = await getStudentSchoolInfos();
-      const { schools, classNames, homeAddresses } = res.data;
+      const {
+        schools,
+        grades,
+        classNames,
+        homeAddresses,
+        genearches,
+        campuses,
+        channels,
+        conMethods,
+        intentions,
+        keywords,
+        courses,
+        followStatuses
+      } = res.data;
       this.schools = schools;
       this.classNames = classNames;
-      console.log(this.schools);
+      this.genearches = genearches;
+      this.grades = grades;
+      this.campuses = campuses;
+      this.channels = channels;
+      this.conMethods = conMethods;
+      this.intentions = intentions;
+      this.keywords = keywords;
+      this.followStatuses = followStatuses;
+      this.courses = courses;
     },
     addGenearch() {
       // 添加联系人布局
@@ -538,7 +570,7 @@ export default {
     },
     queryGeanearchSearchAsync(queryString, cb) {
       //家长
-      for (let i of this.genearchs) {
+      for (let i of this.genearches) {
         i.value = i.name;
       }
       var genearches = this.genearches;
@@ -633,6 +665,17 @@ export default {
       var results = queryString
         ? channels.filter(this.createStateFilter(queryString))
         : channels;
+      cb(results);
+    },
+    queryCampusSearchAsync(queryString, cb) {
+      //校区
+      for (let i of this.campuses) {
+        i.value = i.name;
+      }
+      var campuses = this.campuses;
+      var results = queryString
+        ? campuses.filter(this.createStateFilter(queryString))
+        : campuses;
       cb(results);
     },
 
