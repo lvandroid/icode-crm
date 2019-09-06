@@ -15,6 +15,14 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import * as filters from './filters' // global filters
+// 将权限检查注册到全局
+import permission from '@/directive/permission/permission.js' // 权限判断指令
+// 地址选择控件
+
+// import { pca, pcaa } from 'area-data'
+// import VueAreaLinkage from 'vue-area-linkage'
+// 引用外部模块
+// Vue.component('VueAreaLinkage', VueAreaLinkage)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -23,14 +31,17 @@ import * as filters from './filters' // global filters
  * Currently MockJs will be used in the production environment,
  * please remove it before going online! ! !
  */
-import { mockXHR } from '../mock'
+// import { mockXHR } from '../mock'
 
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI, {
+  locale,
+})
+Vue.directive('permission', permission)
 
 Vue.config.productionTip = false
 

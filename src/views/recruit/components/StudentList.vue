@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div>
     <div class="filter-container">
       <el-input
         v-model="listQuery.name"
@@ -36,16 +36,16 @@
         @click="handleFilter"
       >搜索</el-button>
       <el-button
+        v-permission="['admin','studentNew']"
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
         icon="el-icon-edit"
-        v-permission="['admin','teacherNew']"
         @click="handleCreate"
       >添加</el-button>
       <el-button
         v-waves
-        v-permission="['admin','teacherImport']"
+        v-permission="['admin','studentImport']"
         :loading="downloadLoading"
         class="filter-item"
         type="primary"
@@ -74,7 +74,7 @@
       <el-table-column label="姓名" width="120" sortable prop="name">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
-      <el-table-column label="手机号" align="center" width="160">
+      <el-table-column label="手机号" align="center" width="160" sortable prop="phone">
         <template slot-scope="scope">{{ scope.row.phone }}</template>
       </el-table-column>
       <el-table-column label="性别" width="110" align="center" sortable prop="sex">
@@ -82,11 +82,22 @@
           <span>{{ scope.row.sex==0?"女":"男" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="入职时间" align="center" width="160" sortable prop="entryDate">
-        <template slot-scope="scope">{{ scope.row.entryDate | parseTime('{y}-{m}-{d}') }}</template>
+      <el-table-column label="登记时间" align="center" width="160" sortable prop="entryTime">
+        <template
+          slot-scope="scope"
+        >{{ scope.row.entryTime.valueOf() | parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
       </el-table-column>
-      <el-table-column label="课程类型" align="center" width="320" sortable prop="courseTypeNames">
-        <template slot-scope="scope">{{ scope.row.courseTypeNames }}</template>
+      <el-table-column label="学校" align="center" width="320" sortable prop="school">
+        <template slot-scope="scope">{{ scope.row.school}}</template>
+      </el-table-column>
+      <el-table-column label="年级" align="center" width="320" sortable prop="grade">
+        <template slot-scope="scope">{{ scope.row.grade }}</template>
+      </el-table-column>
+      <el-table-column label="班级" align="center" width="320" sortable prop="className">
+        <template slot-scope="scope">{{ scope.row.className}}</template>
+      </el-table-column>
+      <el-table-column label="家庭住址" align="center" width="320" sortable prop="homeAddress">
+        <template slot-scope="scope">{{ scope.row.homeAddress}}</template>
       </el-table-column>
       <el-table-column label="备注" align="center">
         <template slot-scope="scope">{{ scope.row.mark }}</template>
@@ -121,8 +132,7 @@
 </template>
 
 <script>
-import { getList } from "@/api/table";
-import { getTeachers } from "@/api/teacher";
+import { getStudentList } from "@/api/student";
 import waves from "@/directive/waves";
 import { parseTime } from "@/utils";
 import Pagination from "@/components/Pagination";
@@ -149,10 +159,9 @@ export default {
         pageNum: 1,
         pageSize: 5,
         name: "",
-        courseName: "",
+        sex: "",
         phone: "",
-        courseTypeId: "",
-        mark: "",
+        grade: "",
         // sort: '+id',
         orderKey: "id",
         orderType: "desc"
@@ -171,14 +180,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      getTeachers(this.listQuery).then(response => {
+      getStudentList(this.listQuery).then(response => {
         this.list = response.data.list;
         this.totalNum = response.total;
         this.listLoading = false;
       });
     },
     handleCreate() {
-      this.$router.push("/teacher/addTeacher");
+      this.$router.push("/recruit/addStudent");
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1;
@@ -192,7 +201,7 @@ export default {
         }
         this.listQuery.orderKey = val.substring(1);
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
       this.fetchData();
     },
@@ -207,26 +216,26 @@ export default {
       this.downloadLoading = true;
       import("@/vendor/Export2Excel").then(excel => {
         const tHeader = [
-          "教师姓名",
-          "入职日期",
+          "姓名",
+          "登记日期",
           "性别",
           "手机号码",
-          "课程类型",
+          "年级",
           "备注"
         ];
         const filterVal = [
           "name",
-          "entryDate",
+          "updateDate",
           "sex",
           "phone",
-          "courseTypeNames",
+          "grade",
           "mark"
         ];
         const data = this.formatJson(filterVal, this.list);
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "教师列表"
+          filename: "学员列表"
         });
         this.downloadLoading = false;
       });

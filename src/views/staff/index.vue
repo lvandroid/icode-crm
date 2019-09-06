@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.name"
-        placeholder="课程名"
+        placeholder="姓名"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -39,13 +39,13 @@
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
+        v-permission="['admin','staffNew']"
         icon="el-icon-edit"
-        v-permission="['admin','teacherNew']"
         @click="handleCreate"
       >添加</el-button>
       <el-button
         v-waves
-        v-permission="['admin','teacherImport']"
+        v-permission="['admin','staffImport']"
         :loading="downloadLoading"
         class="filter-item"
         type="primary"
@@ -74,7 +74,7 @@
       <el-table-column label="姓名" width="120" sortable prop="name">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
-      <el-table-column label="手机号" align="center" width="160">
+      <el-table-column label="手机号" align="center" width="160" sortable prop="phone">
         <template slot-scope="scope">{{ scope.row.phone }}</template>
       </el-table-column>
       <el-table-column label="性别" width="110" align="center" sortable prop="sex">
@@ -82,12 +82,33 @@
           <span>{{ scope.row.sex==0?"女":"男" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="入职时间" align="center" width="160" sortable prop="entryDate">
-        <template slot-scope="scope">{{ scope.row.entryDate | parseTime('{y}-{m}-{d}') }}</template>
+      <el-table-column label="身份证号码" width="200" align="center" sortable prop="sex">
+        <template slot-scope="scope">{{ scope.row.idCardNo }}</template>
       </el-table-column>
-      <el-table-column label="课程类型" align="center" width="320" sortable prop="courseTypeNames">
-        <template slot-scope="scope">{{ scope.row.courseTypeNames }}</template>
+
+      <el-table-column label="入职日期" align="center" width="160" sortable prop="updateDate">
+        <template slot-scope="scope">{{ scope.row.entryDate| parseTime('{y}-{m}-{d} {h}:{m}:{s}') }}</template>
       </el-table-column>
+      <!-- <el-table-column label="紧急联系人一" align="center" width="320" sortable prop="grade">
+        <template slot-scope="scope">
+          {{ scope.row.emergencyOneName}}
+        </template>
+      </el-table-column>
+       <el-table-column label="紧急联系人一手机号" align="center" width="160" sortable prop="phone">
+        <template slot-scope="scope">
+          {{ scope.row.emergencyOnePhone}}
+        </template>
+      </el-table-column>
+       <el-table-column label="紧急联系人二" align="center" width="320" sortable prop="grade">
+        <template slot-scope="scope">
+          {{ scope.row.emergencyTwoName}}
+        </template>
+      </el-table-column>
+       <el-table-column label="紧急联系人一手机号" align="center" width="160" sortable prop="phone">
+        <template slot-scope="scope">
+          {{ scope.row.emergencyTwoPhone}}
+        </template>
+      </el-table-column>-->
       <el-table-column label="备注" align="center">
         <template slot-scope="scope">{{ scope.row.mark }}</template>
       </el-table-column>
@@ -117,15 +138,17 @@
       :limit.sync="listQuery.pageSize"
       @pagination="fetchData"
     />
+
+    <el-dialog :title="dialogType==='edit'?'编辑角色':'新建角色'" />
   </div>
 </template>
 
 <script>
-import { getList } from "@/api/table";
-import { getTeachers } from "@/api/teacher";
+import { getStaffList } from "@/api/staff";
 import waves from "@/directive/waves";
 import { parseTime } from "@/utils";
 import Pagination from "@/components/Pagination";
+// import permission from "@/directive/permission/index.js"; // 权限判断指令
 
 export default {
   components: { Pagination },
@@ -145,15 +168,11 @@ export default {
       list: null,
       totalNum: 0,
       listLoading: true,
+      dialogVisible: false,
+      dialogType: "new",
       listQuery: {
         pageNum: 1,
         pageSize: 5,
-        name: "",
-        courseName: "",
-        phone: "",
-        courseTypeId: "",
-        mark: "",
-        // sort: '+id',
         orderKey: "id",
         orderType: "desc"
       },
@@ -171,14 +190,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      getTeachers(this.listQuery).then(response => {
+      getStaffList(this.listQuery).then(response => {
         this.list = response.data.list;
         this.totalNum = response.total;
         this.listLoading = false;
       });
     },
     handleCreate() {
-      this.$router.push("/teacher/addTeacher");
+      this.$router.push("/staff/addStaff");
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1;
@@ -192,7 +211,7 @@ export default {
         }
         this.listQuery.orderKey = val.substring(1);
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
       this.fetchData();
     },
@@ -206,27 +225,13 @@ export default {
     handleDownload() {
       this.downloadLoading = true;
       import("@/vendor/Export2Excel").then(excel => {
-        const tHeader = [
-          "教师姓名",
-          "入职日期",
-          "性别",
-          "手机号码",
-          "课程类型",
-          "备注"
-        ];
-        const filterVal = [
-          "name",
-          "entryDate",
-          "sex",
-          "phone",
-          "courseTypeNames",
-          "mark"
-        ];
+        const tHeader = ["姓名", "入职日期", "性别", "手机号码", "备注"];
+        const filterVal = ["name", "entryDate", "sex", "phone", "mark"];
         const data = this.formatJson(filterVal, this.list);
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "教师列表"
+          filename: "学员列表"
         });
         this.downloadLoading = false;
       });
