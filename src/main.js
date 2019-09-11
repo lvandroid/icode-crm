@@ -33,9 +33,9 @@ import permission from '@/directive/permission/permission.js' // 权限判断指
  */
 // import { mockXHR } from '../mock'
 
-if (process.env.NODE_ENV === 'production') {
-  mockXHR()
-}
+// if (process.env.NODE_ENV === 'production') {
+  // mockXHR()
+// }
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, {

@@ -186,7 +186,7 @@
           </el-row>
           <el-form-item label="推荐人手机号码">
             <el-input
-              v-model="form.referId"
+              v-model="form.referPhone"
               class="formItem"
               placeholder="输入推荐人手机号码"
               show-word-limit
@@ -212,7 +212,7 @@
                 <el-radio v-for="method in conMethods" :label="method.label" :key="method.value" />
               </el-radio-group>-->
               <el-autocomplete
-                v-model="form.consulteMethod"
+                v-model="form.consultMethod"
                 class="formItem"
                 placeholder="请选择或输入咨询方式"
                 :fetch-suggestions="queryConMethodSearchAsync"
@@ -357,7 +357,7 @@
                   v-for="staff in staffs"
                   :key="staff.id"
                   :label="staff.name"
-                  :value="staff.name"
+                  :value="staff.id"
                 />
               </el-select>
             </el-form-item>
@@ -369,7 +369,7 @@
                   v-for="staff in staffs"
                   :key="staff.id"
                   :label="staff.name"
-                  :value="staff.name"
+                  :value="staff.id"
                 />
               </el-select>
             </el-form-item>
@@ -381,7 +381,7 @@
                   v-for="staff in staffs"
                   :key="staff.id"
                   :label="staff.name"
-                  :value="staff.name"
+                  :value="staff.id"
                 />
               </el-select>
             </el-form-item>
@@ -400,6 +400,7 @@
 
 <script>
 import { addStudent, getStudentSchoolInfos } from "@/api/student";
+import { getAll} from "@/api/staff";
 import { parseTime } from "@/utils";
 // import {
 // genearches,
@@ -446,9 +447,10 @@ export default {
         referPhone: "", // 推荐人手机号码
         createTime: "", //录入时间
         mark: "", // 其他信息
-        consulteMethod: "", //咨询方式
+        consultMethod: "", //咨询方式
         intention: "", //意向度
         courses: [], //咨询课程
+        courseStr:'',
         followStatus: "", //跟进状态
         keyword: "", //关键词
         revisitRemind: "", //回访提醒
@@ -478,6 +480,7 @@ export default {
   },
   mounted() {
     this.getStudentSchoolInfos();
+    this.getStaffs();
   },
   methods: {
     onSubmit() {
@@ -485,14 +488,15 @@ export default {
         if (valid) {
           this.form.createTime = new Date().getTime();
           var city = "";
-          debugger;
           for (let item of this.selectedNowOption) {
             city = city + CodeToText[item] + " ";
           }
           this.form.homeAddress = city + " " + this.nowAddrDetail;
+          this.form.courses.forEach(c=>{
+            this.form.courseStr=this.form.courseStr+c
+          })
           addStudent(this.form)
             .then(response => {
-              console.log(response);
               this.$router.push("/recruit/consultation");
             })
             .catch(error => {
@@ -506,6 +510,10 @@ export default {
         message: "cancel!",
         type: "warning"
       });
+    },
+    async getStaffs(){
+      const res = await getAll();
+      this.staffs =res.data;
     },
 
     async getStudentSchoolInfos() {
@@ -561,7 +569,6 @@ export default {
     },
     createStateFilter(queryString) {
       return state => {
-        console.log(state);
         state.value = state.name;
         return (
           state.value.toLowerCase().indexOf(queryString.toLowerCase()) != -1
