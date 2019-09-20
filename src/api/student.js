@@ -22,3 +22,11 @@ export function getStudentSchoolInfos() {
     method: 'get'
   })
 }
+
+export function updateFollowStatus(data){
+  return request({
+    url: '/api/student/updateStatus',
+    method:'put',
+    data
+  })
+}

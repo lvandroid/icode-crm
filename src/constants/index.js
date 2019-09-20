@@ -158,6 +158,7 @@ export default {
   genearches,
   grades,
   sexs,
+  followStatus,
   conMethod,
   intention
 }

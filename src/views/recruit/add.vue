@@ -493,7 +493,7 @@ export default {
           }
           this.form.homeAddress = city + " " + this.nowAddrDetail;
           this.form.courses.forEach(c=>{
-            this.form.courseStr=this.form.courseStr+c
+            this.form.courseStr=this.form.courseStr+' '+c
           })
           addStudent(this.form)
             .then(response => {
