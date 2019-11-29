@@ -71,57 +71,147 @@
       <!-- {{ scope.row.id}} -->
       <!-- </template> -->
       <!-- </el-table-column> -->
-      <el-table-column label="姓名" width="120"  prop="name">
+      <el-table-column
+        label="姓名"
+        width="120"
+        prop="name"
+      >
         <template slot-scope="scope">
-          <span v-if="scope.row.sex==0" class="red-font">♀</span>
-          <span v-if="scope.row.sex==1" class="blue-font">♂</span>
+          <span
+            v-if="scope.row.sex==0"
+            class="red-font"
+          >♀</span>
+          <span
+            v-if="scope.row.sex==1"
+            class="blue-font"
+          >♂</span>
           {{scope.row.name }}</template>
       </el-table-column>
-      <el-table-column label="联系电话" align="center" width="160"  prop="phone">
+      <el-table-column
+        label="联系电话"
+        align="center"
+        width="160"
+        prop="phone"
+      >
         <template slot-scope="scope">{{ scope.row.phone}}</template>
       </el-table-column>
-      <el-table-column label="意向度" align="center"  prop="intention">
+      <el-table-column
+        label="意向度"
+        align="center"
+        prop="intention"
+      >
         <template slot-scope="scope">{{scope.row.intention}}</template>
       </el-table-column>
-      <el-table-column label="意向课程" align="center"  prop="courseStr">
+      <el-table-column
+        label="意向课程"
+        align="center"
+        prop="courseStr"
+      >
         <template slot-scope="scope">{{scope.row.courseStr}}</template>
       </el-table-column>
-      <el-table-column label="沟通记录" align="center"  prop="communicateContent">
-        <template slot-scope="scope">{{scope.row.communicateContent}}</template>
+      <el-table-column
+        label="沟通记录"
+        align="center"
+        class="cursor-pointer"
+        prop="communicateContent"
+      >
+        <template slot-scope='{row}'>
+          <div
+            @click="openAddCommunicateDialog(row)"
+            class="cursor-pointer"
+          >
+            <i
+              v-if="row.communicateContent == '' || row.communicateContent==null"
+              class="el-icon-circle-plus"
+            ></i>
+            <p>{{row.communicateContent}}</p>
+          </div>
+        </template>
       </el-table-column>
-      <el-table-column label="关键词" align="center"  prop="keyword">
+      <el-table-column
+        label="关键词"
+        align="center"
+        prop="keyword"
+      >
         <template slot-scope="scope">{{scope.row.keyword}}</template>
       </el-table-column>
-      <el-table-column label="跟进状态" align="center"  prop="followStatus">
-        <el-dropdown slot-scope="{row}" trigger="click" class="el-dropdown-status" @command="changeStatus">
-          <el-tag @click="handleChange(row)" class="red-font" effect="plain" type="primary">{{row.followStatus}}
+      <el-table-column
+        label="跟进状态"
+        align="center"
+        prop="followStatus"
+      >
+        <el-dropdown
+          slot-scope="{row}"
+          trigger="click"
+          class="el-dropdown-status"
+          @command="changeStatus"
+        >
+          <el-tag
+            @click="handleChange(row)"
+            class="red-font"
+            effect="plain"
+            type="primary"
+          >{{row.followStatus}}
           </el-tag>
-          <el-dropdown-menu >
-            <el-dropdown-item v-for="status in followStatuses" :key="status.value" :command="status.label">
+          <el-dropdown-menu>
+            <el-dropdown-item
+              v-for="status in followStatuses"
+              :key="status.value"
+              :command="status.label"
+            >
               {{status.label}}
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-table-column>
-      <el-table-column label="类型" align="center"  prop="type">
+      <el-table-column
+        label="类型"
+        align="center"
+        prop="type"
+      >
         <template slot-scope="scope">{{scope.row.type}}</template>
       </el-table-column>
-      <el-table-column label="渠道" align="center"  prop="channel">
+      <el-table-column
+        label="渠道"
+        align="center"
+        prop="channel"
+      >
         <template slot-scope="scope">{{scope.row.channel}}</template>
       </el-table-column>
-      <el-table-column label="最新跟进时间" align="center"  prop="updateTime">
+      <el-table-column
+        label="最新跟进时间"
+        align="center"
+        prop="updateTime"
+      >
         <template slot-scope="scope">{{scope.row.updateTime}}</template>
       </el-table-column>
-      <el-table-column label="咨询校区" align="center"  prop="campus">
+      <el-table-column
+        label="咨询校区"
+        align="center"
+        prop="campus"
+      >
         <template slot-scope="scope">{{scope.row.campus}}</template>
       </el-table-column>
-      <el-table-column label="采单员" align="center"  prop="clerk">
+      <el-table-column
+        label="采单员"
+        align="center"
+        prop="clerk"
+      >
         <template slot-scope="scope">{{scope.row.clerk}}</template>
       </el-table-column>
-      <el-table-column label="销售" align="center"  prop="salesman">
+      <el-table-column
+        label="销售"
+        align="center"
+        prop="salesman"
+      >
         <template slot-scope="scope">{{scope.row.salesman}}</template>
       </el-table-column>
-      <el-table-column label="操作" align="center"  prop="operate" fixed="right">
+      <el-table-column
+        label="操作"
+        align="center"
+        prop="operate"
+        fixed="right"
+      >
         <template slot-scope="scope">{{scope.row.operate}}</template>
       </el-table-column>
     </el-table>
@@ -134,15 +224,73 @@
       :limit.sync="listQuery.pageSize"
       @pagination="fetchData"
     />
+
+    <el-dialog
+      title="新增沟通记录"
+      :visible.sync="recordVisible"
+      :close-on-click-modal="true"
+      :center="true"
+    >
+      <el-form :model="record">
+
+        <el-form-item label="新增沟通记录">
+          <el-input
+            type="textarea"
+            v-model="record.content"
+            class="record-content"
+            placeholder="请输入沟通内容"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="新增回访提醒">
+          <el-date-picker
+            v-model="record.revisitRemind"
+            class="record-time"
+            placeholder="选择时间"
+            type="datetime"
+            value-format="timestamp"
+          ></el-date-picker>
+        </el-form-item>
+        <el-table
+          :data="recordList"
+          v-if="recordList!=null"
+          class="record-list"
+        >
+          <el-table-column
+            label="历史沟通人"
+            slot-scope="scope"
+          >{{scope.row.staffName}}</el-table-column>
+          <el-table-column
+            label="历史沟通记录"
+            slot-scope="scope"
+          >{{scope.row.content}}</el-table-column>
+          <el-table-column
+            label="沟通时间"
+            slot-scope="scope"
+          >{{scope.row.createTime}}</el-table-column>
+        </el-table>
+        <el-button
+          type="info"
+          class="btn-cancel"
+          @click="cancelRecord"
+        >取消</el-button>
+        <el-button
+          type="primary"
+          @click="saveRecord"
+          class="btn-save"
+        >保存</el-button>
+      </el-form>
+
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getStudentList,updateFollowStatus } from "@/api/student";
+import { getStudentList,updateFollowStatus,addCommunicate } from "@/api/student";
 import waves from "@/directive/waves";
 import { parseTime } from "@/utils";
 import {followStatus} from "@/constants"
 import Pagination from "@/components/Pagination";
+import store from '@/store'
 
 export default {
   components: { Pagination },
@@ -160,6 +308,7 @@ export default {
   data() {
     return {
       list: null,
+      recordList:null,
       totalNum: 0,
       listLoading: true,
       listQuery: {
@@ -173,9 +322,16 @@ export default {
         orderKey: "id",
         orderType: "desc"
       },
+      recordVisible:false,
       currentRow:"",
       followStatuses:"",
       value: "",
+      record:{
+        studentId:'',
+        revisitRemind:'',
+        content:''
+      },
+      staffId:'',
       sortOptions: [
         { label: "默认", key: "-id" },
         { label: "倒序", key: "+id" }
@@ -185,6 +341,8 @@ export default {
   },
   created() {
     this.followStatuses = followStatus
+    this.staffId = store.getters.staffId
+    console.log(this.staffId)
     this.fetchData();
   },
   methods: {
@@ -211,6 +369,20 @@ export default {
       })
 
       // row.followStatus= command
+    },
+    openAddCommunicateDialog(row){
+      this.recordVisible = true;
+      this.record.studentId= row.id
+    },
+
+    cancelRecord(){
+      this.recordVisible= false;
+    },
+    saveRecord(){
+      console.log('保存沟通记录')
+      addCommunicate(this.record).then(response=>{
+        this.recordVisible=false;
+      })
     },
     handleFilter(val) {
       this.listQuery.pageNum = 1;
@@ -283,14 +455,34 @@ export default {
 };
 </script>
 <style>
-  .red-font{
-    color: red
-  }
-  .blue-font{
-    color: blue
-  }
-  .el-dropdown-status {
-    cursor: pointer;
-    color: #409EFF;
-  }
+.red-font {
+  color: red;
+}
+.blue-font {
+  color: blue;
+}
+.el-dropdown-status {
+  cursor: pointer;
+  color: #409eff;
+}
+.record-content {
+  width: 300px;
+}
+.record-time {
+  width: 300px;
+}
+.record-list {
+}
+.btn-cancel {
+  margin-top: 20px;
+  background-color: white;
+  color: black;
+}
+.btn-save {
+  margin-top: 20px;
+  float: right;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
 </style>

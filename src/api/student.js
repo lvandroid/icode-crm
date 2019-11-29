@@ -23,10 +23,33 @@ export function getStudentSchoolInfos() {
   })
 }
 
-export function updateFollowStatus(data){
+export function updateFollowStatus(data) {
   return request({
     url: '/api/student/updateStatus',
-    method:'put',
+    method: 'put',
     data
+  })
+}
+
+/**
+ *  新增沟通记录
+ * @param {} data 
+ */
+export function addCommunicate(data) {
+  return request({
+    url: '/api/student/addCommunicate',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 根据studentId 获取沟通记录 
+ * @param {} id 
+ */
+export function getCommunicatesById(id) {
+  return request({
+    url: `/api/student/getCommunicatesById/${id}`,
+    method: 'get',
   })
 }

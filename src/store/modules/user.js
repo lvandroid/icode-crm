@@ -31,6 +31,7 @@ const state = {
   name: '',
   avatar: '',
   rootRoleId: '',
+  staffId: '',
   routes: [],
   addRoutes: [],
   permissions: [],
@@ -52,6 +53,9 @@ const mutations = {
   },
   SET_ROOT_ROLE_ID: (state, rootId) => {
     state.rootRoleId = rootId
+  },
+  SET_STAFF_ID: (state, staffId) => {
+    state.staffId = staffId
   },
   SET_PERMISSIONS: (state, permissions) => {
     state.permissions = permissions
@@ -120,12 +124,14 @@ const actions = {
           username,
           avatar,
           rootRoleId,
+          staffId,
           permissions
         } = data
 
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
         commit('SET_ROOT_ROLE_ID', rootRoleId)
+        commit('SET_STAFF_ID', staffId)
         commit('SET_PERMISSIONS', permissions)
         // resetRouter()
         getRoutes(rootRoleId).then(response => {

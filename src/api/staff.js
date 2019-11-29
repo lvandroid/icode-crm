@@ -8,7 +8,7 @@ export function addStaff(data) {
   })
 }
 
-export function getAll(){
+export function getAll() {
   return request({
     url: '/api/staff/getAll',
     method: 'get'

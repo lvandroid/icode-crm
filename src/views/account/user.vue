@@ -42,24 +42,51 @@
         style="width: 100%;margin-top:30px;"
         @sort-change="sortChange"
       >
-        <el-table-column align="center" label="编号" width="220">
+        <el-table-column
+          align="center"
+          label="编号"
+          width="220"
+        >
           <template slot-scope="scope">{{ scope.row.id }}</template>
         </el-table-column>
-        <el-table-column align="center" label="用户名" width="320">
+        <el-table-column
+          align="center"
+          label="用户名"
+          width="320"
+        >
           <template slot-scope="scope">{{ scope.row.username }}</template>
         </el-table-column>
         <!-- <el-table-column align="center" label="密码" width="400">
           <template slot-scope="scope">{{ scope.row.password }}</template>
         </el-table-column>-->
 
-        <el-table-column align="center" label="角色" width="400">
+        <el-table-column
+          align="center"
+          label="角色"
+          width="400"
+        >
           <template slot-scope="scope">{{ scope.row.roleNames}}</template>
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column
+          align="center"
+          label="操作"
+        >
           <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="handleEdit(scope)">编辑</el-button>
-            <el-button type="primary" size="small" @click="changePassword(scope)">修改密码</el-button>
-            <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              @click="handleEdit(scope)"
+            >编辑</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              @click="changePassword(scope)"
+            >修改密码</el-button>
+            <el-button
+              type="danger"
+              size="small"
+              @click="handleDelete(scope)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,10 +99,21 @@
         @pagination="getUsers"
       />
 
-      <el-dialog :visible.sync="dialogVisible" :title="dialogType==='new'?'新建用户':'编辑用户'">
-        <el-form :model="user" label-width="80px" label-position="left">
+      <el-dialog
+        :visible.sync="dialogVisible"
+        :title="dialogType==='new'?'新建用户':'编辑用户'"
+      >
+        <el-form
+          :model="user"
+          label-width="80px"
+          label-position="left"
+        >
           <el-form-item label="用户名">
-            <el-input v-model="user.username" placeholder="输入用户名" :disabled="usernameDisable" />
+            <el-input
+              v-model="user.username"
+              placeholder="输入用户名"
+              :disabled="usernameDisable"
+            />
           </el-form-item>
           <el-form-item label="密码">
             <el-input
@@ -86,7 +124,10 @@
               :disabled="!changePwd&&usernameDisable"
             />
           </el-form-item>
-          <el-form-item label="角色" v-if="!changePwd">
+          <el-form-item
+            label="角色"
+            v-if="!changePwd"
+          >
             <!-- <el-tree
               ref="tree"
               include-half-checked="true"
@@ -130,10 +171,29 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="分配员工">
+            <el-select
+              v-model="form.staffId"
+              placeholder=""
+            >
+              <el-option
+                v-for="staff in staffs"
+                :key="staff.id"
+                :label="staff.nickName"
+                :value="staff.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
         <div style="text-align:right;">
-          <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-          <el-button type="primary" @click="confirmUser">保存</el-button>
+          <el-button
+            type="danger"
+            @click="dialogVisible=false"
+          >取消</el-button>
+          <el-button
+            type="primary"
+            @click="confirmUser"
+          >保存</el-button>
         </div>
       </el-dialog>
     </div>
@@ -152,6 +212,7 @@ import {
   updatePwd,
   updateRoles
 } from "@/api/user";
+import { getAll} from "@/api/staff";
 import { getRoles } from "@/api/role";
 import { deepClone } from "@/utils";
 
@@ -160,6 +221,7 @@ const defaultUser = {
   username: "",
   password: "",
   rootRoleId: "",
+  staffId:"",
   roleIds: []
 };
 
@@ -189,8 +251,10 @@ export default {
         username: "",
         password: "",
         rootRoleId: "",
+        staffId:"",
         roleIds: []
       },
+      staffs: [], //员工
       user: Object.assign({}, defaultUser),
       role: Object.assign({}, defaultRole),
       value: "",
@@ -218,6 +282,7 @@ export default {
   created() {
     this.getUsers();
     this.getRoles();
+    this.getStaffs();
   },
   // watch: {
   //   roleName: function(newValue, oldValue) {
@@ -235,6 +300,10 @@ export default {
       const res = await getRoles();
       this.roles = res.data;
       this.otherRoles = res.data;
+    },
+    async getStaffs(){
+      const res = await getAll();
+      this.staffs =res.data;
     },
     fetchData() {},
     handleCreate() {
@@ -338,6 +407,7 @@ export default {
     },
     async confirmUser() {
       const isEdit = this.dialogType === "edit";
+      this.user.staffId = this.form.staffId
       if (isEdit) {
         await updateRoles(this.user.id, this.user);
         this.dialogVisible = false;
