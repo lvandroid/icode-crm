@@ -257,16 +257,24 @@
         >
           <el-table-column
             label="历史沟通人"
-            slot-scope="scope"
-          >{{scope.row.staffName}}</el-table-column>
+            prop="staffName"
+          >
+            <template slot-scope="scope">
+              {{scope.row.staffName}}</template>
+          </el-table-column>
           <el-table-column
             label="历史沟通记录"
-            slot-scope="scope"
-          >{{scope.row.content}}</el-table-column>
+            prop="content"
+          >
+            <template slot-scope="scope">
+              {{scope.row.content}}
+            </template>
+          </el-table-column>
           <el-table-column
             label="沟通时间"
-            slot-scope="scope"
-          >{{scope.row.createTime}}</el-table-column>
+            prop="createTime"
+          >
+            <template slot-scope="scope">{{scope.row.createTime| parseTime()}}</template></el-table-column>
         </el-table>
         <el-button
           type="info"
@@ -285,7 +293,7 @@
 </template>
 
 <script>
-import { getStudentList,updateFollowStatus,addCommunicate } from "@/api/student";
+import { getStudentList,updateFollowStatus,addCommunicate,getCommunicatesById } from "@/api/student";
 import waves from "@/directive/waves";
 import { parseTime } from "@/utils";
 import {followStatus} from "@/constants"
@@ -373,6 +381,19 @@ export default {
     openAddCommunicateDialog(row){
       this.recordVisible = true;
       this.record.studentId= row.id
+      this.record.staffId = this.staffId
+      getCommunicatesById(this.record.studentId).then(
+        response => {
+          console.log(response.data)
+          if(response.data==null || response.data.length==0){
+          this.recordList = null;
+          }else{
+          this.recordList = response.data;
+          }
+        }
+      ).catch(error => {
+        console.error(error)
+      })
     },
 
     cancelRecord(){
