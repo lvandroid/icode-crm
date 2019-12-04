@@ -251,6 +251,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-table
+          max-height="200"
           :data="recordList"
           v-if="recordList!=null"
           class="record-list"
